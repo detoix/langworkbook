@@ -14,7 +14,7 @@ const Classroom = () => {
           <div>
             {exercises.map(e => 
               <p>
-                {e.id} {e.content.map((x: any) => x.text).join("_")}<Link to={"/exercises/" + e.id}>take</Link>
+                {e.id} {e.content.map((x: any) => x.text).join("_")}<Link to={"/workbook/" + e.id}>take</Link>
               </p>
             )}
           </div>

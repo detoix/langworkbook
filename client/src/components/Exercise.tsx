@@ -10,7 +10,11 @@ const handleSubmit = (context: any, event: any) => {
     answer.push(event.target[index].value)
   }
 
-  solveExcercise({ id: 0 }, { id: context.exerciseId, answer: answer })
+  solveExcercise({ id: 0 }, { id: context.exerciseId, answer: answer }).then(e => {
+
+    console.log(e)
+  })
+
 
   event.preventDefault()
 }

@@ -1,19 +1,15 @@
-const filterExercises = (student, exercises) => {
+const filterUndoneExercises = (student, exercises) => {
   let excercisesAlreadyTried = new Set(student.exercises.map(e => e.id))
   let excersisesNeverDone = exercises.filter(e => !excercisesAlreadyTried.has(e.id))
 
   return excersisesNeverDone
 }
 
-const showMyExercises = (student, exercises) => {
-  let myExercises = student.exercises.map(e => {
+const filterMyExercises = (student, exercises) => {
+  let myExercises = student.exercises.map(excerciseRecord => {
+    let exercise = exercises.find(exercise => exercise.id == excerciseRecord.id)
 
-    let exercise = exercises.find(x => x.id == e.id)
-    let exerciseData = {
-      puzzle: exercise.content.text.join("_")
-    }
-
-    return Object.assign(exerciseData, e)
+    return Object.assign(exercise, excerciseRecord)
   })
 
   return myExercises
@@ -21,9 +17,9 @@ const showMyExercises = (student, exercises) => {
 
 const solveExercise = (student, exercise, answer) => {
   let studentWithAttempt = Object.assign({}, student)
-  let correct = exercise.answer.filter((e, index) => e == answer[index]).length
+  let correct = exercise.answer.filter((phrase, index) => phrase == answer[index]).length
   let result = correct != 0 ? correct / exercise.answer.length : 0
-  let excerciseRecord = studentWithAttempt.exercises.find(e => e.id == exercise.id)
+  let excerciseRecord = studentWithAttempt.exercises.find(exerciseRecord => exerciseRecord.id == exercise.id)
 
   if (excerciseRecord) {} else { excerciseRecord = { id: exercise.id, history: [] } }
 
@@ -33,7 +29,7 @@ const solveExercise = (student, exercise, answer) => {
 }
 
 module.exports = {
-  filterExercises,
-  showMyExercises,
+  filterUndoneExercises,
+  filterMyExercises,
   solveExercise,
 }
