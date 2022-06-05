@@ -1,10 +1,9 @@
-import Async from 'react-async'
-import { useParams } from 'react-router-dom'
-import { Excercise } from '../models/excercise'
-import { getExercise, solveExcercise } from '../services/client'
+import Async from "react-async"
+import { useParams } from "react-router-dom"
+import { Excercise } from "../models/excercise"
+import { getExercise, solveExcercise } from "../services/client"
 
 const handleSubmit = (context: any, event: any) => {
-
   let answer = []
 
   for (let index = 0; index < event.target.length - 1; index++) {
@@ -26,7 +25,7 @@ const Exercise = () => {
       {(exercise: Excercise) => (
         <div>
           <form onSubmit={event => handleSubmit({ studentId: 0, exerciseId: id }, event)}>
-            {exercise.content.map((phrase: any, index: number) => {
+            {exercise.content.map((phrase) => {
               if (phrase.text) {
                 return phrase.text
               } else {

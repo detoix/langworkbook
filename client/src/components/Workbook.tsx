@@ -1,7 +1,7 @@
-import Async from 'react-async'
-import { Link } from 'react-router-dom'
-import { getExercises } from '../services/client'
-import { Excercise } from '../models/excercise'
+import Async from "react-async"
+import { Link } from "react-router-dom"
+import { getExercises } from "../services/client"
+import { Excercise } from "../models/excercise"
 
 const Exercises = () => (
   <Async promiseFn={getExercises}>
@@ -11,7 +11,7 @@ const Exercises = () => (
         <div>
           {exercises.map((exercise: Excercise) => 
             <p>
-              {exercise.id}. {exercise.tags.map(tag => <a href=''>#{tag}</a>)} {exercise.content.map(phrase => phrase.text).join('_')} <Link to={'/workbook/' + exercise.id}>[take]</Link>
+              {exercise.id}. {exercise.tags.map(tag => <a href="">#{tag}</a>)} {exercise.content.map(phrase => phrase.text).join("_")} <Link to={"/workbook/" + exercise.id}>[take]</Link>
             </p>
           )}
         </div>

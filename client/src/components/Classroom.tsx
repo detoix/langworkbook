@@ -1,7 +1,7 @@
 import Async from "react-async"
-import { useParams, Link } from 'react-router-dom'
-import { getMyExercises } from '../services/client'
-import { Excercise } from '../models/excercise'
+import { useParams, Link } from "react-router-dom"
+import { getMyExercises } from "../services/client"
+import { Excercise } from "../models/excercise"
 
 const Classroom = () => {
   const { id } = useParams()
@@ -14,7 +14,7 @@ const Classroom = () => {
           <div>
             {exercises.map(e => 
               <p>
-                {e.id} {e.content.map((x: any) => x.text).join('_')}<Link to={'/exercises/' + e.id}>take</Link>
+                {e.id} {e.content.map((x: any) => x.text).join("_")}<Link to={"/exercises/" + e.id}>take</Link>
               </p>
             )}
           </div>
