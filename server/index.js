@@ -6,6 +6,32 @@ const port = process.env.PORT || 8080
 
 const { getStudents, getExercises } = require("./mocks")
 const { filterMyExercises, solveExercise } = require("./behaviors")
+const { createDatabaseClient } = require("./dbclient")
+
+const client = createDatabaseClient()
+
+// client.connect(err => {
+//   if (err) {
+//     console.error('connection error', err.stack)
+//   } else {
+//     console.log('connected')
+//   }
+// })
+
+// client.query('CREATE TABLE IF NOT EXISTS exercises ( \
+//   id SERIAL PRIMARY KEY, \
+//   tags text[], \
+//   content jsonb \
+//   )', (err, res) => {
+//   if (err) throw err
+//   console.log(res)
+// })
+
+// client.query('INSERT INTO exercises(tags, content) VALUES ($1, $2)', [["a", "b"], {"xd": 12}], (err, res) => {
+//   if (err) throw err
+//   console.log(res)
+//   client.end()
+// })
 
 app.use(cors())
 app.use(bodyParser.json())
