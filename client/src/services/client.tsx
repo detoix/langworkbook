@@ -7,18 +7,19 @@ const getExercises = async () => {
   return res.data
 }
 
-const getMyExercises = async (id:any) => {
-  const res = await axios.get(url + "/students/" + id.id + "/exercises")
+const getMyExercises = async (props: any) => {
+  const res = await axios.get(url + "/students/" + props.id + "/exercises")
   return res.data
 }
 
-const getExercise = async (id:any) => {
-  const res = await axios.get(url + "/exercises/" + id.id)
+const getExercise = async (props: any) => {
+  const res = await axios.get(url + "/exercises/" + props.id)
   return res.data
 }
 
-const solveExcercise = (student: any, exercise: any) => {
-  return axios.post(url + "/students/" + student.id + "/exercises/" + exercise.id, exercise)
+const solveExcercise = async (student: any, exercise: any) => {
+  const res = await axios.post(url + "/students/" + student.id + "/exercises/" + exercise.id, exercise)
+  return res.data
 }
 
 export {

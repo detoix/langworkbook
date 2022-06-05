@@ -7,7 +7,7 @@ const Classroom = () => {
   const { id } = useParams()
 
   return (
-    <Async promiseFn={(id: any) => getMyExercises(id)} id={id}>
+    <Async promiseFn={props => getMyExercises(props)} id={id}> {/* explicit syntax because otherwise component won't reload */}
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
         {(exercises: Excercise[]) => (
