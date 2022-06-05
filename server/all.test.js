@@ -1,11 +1,11 @@
-const { getStudents, getExercises } = require('./mocks')
-const { filterExercises, showMyExercises, solveExercise } = require('./behaviors')
+const { getStudents, getExercises } = require("./mocks")
+const { filterExercises, showMyExercises, solveExercise } = require("./behaviors")
 
-test('visitor can browse all excercises', () => {
+test("visitor can browse all excercises", () => {
   //todo
 })
 
-test('student can browse excercises they have never done before', () => {
+test("student can browse excercises they have never done before", () => {
   let students = getStudents()
   let exercises = getExercises()
 
@@ -15,7 +15,7 @@ test('student can browse excercises they have never done before', () => {
   expect(availableExercises).toMatchObject([{id: 1}])
 })
 
-test('student can explore their exercises', () => {
+test("student can explore their exercises", () => {
   let students = getStudents()
   let exercises = getExercises()
 
@@ -27,21 +27,21 @@ test('student can explore their exercises', () => {
     { id: 1, puzzle: "Florian is seit drei Monaten wieder __." }])
 })
 
-test('student can do an excercise', () => {
+test("student can do an excercise", () => {
   //todo
 })
 
-test('student can submit a new exercise', () => {
+test("student can submit a new exercise", () => {
   //todo
 })
 
-test('student can solve an exercise', () => {
+test("student can solve an exercise", () => {
   let students = getStudents()
   let exercises = getExercises()
 
   let student = students[0]
   let exercise = exercises[0]
-  let answer = ['dupa', 'iba']
+  let answer = ["dupa", "iba"]
   let studentWithAttempt = solveExercise(student, exercise, answer)
 
   expect(studentWithAttempt).toMatchObject({ exercises: [ { history: [{}, {}, {answer: answer, correct: 0.5}]} ] })

@@ -10,7 +10,7 @@ const showMyExercises = (student, exercises) => {
 
     let exercise = exercises.find(x => x.id == e.id)
     let exerciseData = {
-      puzzle: exercise.content.text.join('_')
+      puzzle: exercise.content.text.join("_")
     }
 
     return Object.assign(exerciseData, e)
