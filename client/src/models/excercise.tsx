@@ -1,10 +1,10 @@
 interface Excercise {
   id: string
   tags: string[]
-  content: Fragment[]
+  content: Phrase[]
 }
 
-interface Fragment {
+interface Phrase {
   text?: string
   options?: string[]
   letters?: string

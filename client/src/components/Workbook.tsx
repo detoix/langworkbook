@@ -11,7 +11,7 @@ const Exercises = () => (
         <div>
           {exercises.map((exercise: Excercise) => 
             <p>
-              {exercise.id}. {exercise.tags.map(tag => <a href=''>#{tag}</a>)} {exercise.content.map(fragment => fragment.text).join('_')} <Link to={'/workbook/' + exercise.id}>[take]</Link>
+              {exercise.id}. {exercise.tags.map(tag => <a href=''>#{tag}</a>)} {exercise.content.map(phrase => phrase.text).join('_')} <Link to={'/workbook/' + exercise.id}>[take]</Link>
             </p>
           )}
         </div>
