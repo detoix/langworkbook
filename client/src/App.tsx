@@ -12,7 +12,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/workbook" />} />
         <Route path="/workbook" element={<Workbook />} />
-        <Route path="/workbook/:id" element={<Excercise />} />
+        <Route path="/exercises/:id" element={<Excercise />} />
         <Route path="/students/:id" element={<Classroom />} />
       </Routes>
     </BrowserRouter>

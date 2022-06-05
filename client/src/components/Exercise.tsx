@@ -11,10 +11,8 @@ const handleSubmit = (context: any, event: any) => {
   }
 
   solveExcercise({ id: 0 }, { id: context.exerciseId, answer: answer }).then(e => {
-
     console.log(e)
   })
-
 
   event.preventDefault()
 }
