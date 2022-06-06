@@ -1,7 +1,9 @@
 interface Excercise {
   id: string
   tags: string[]
-  content: Phrase[]
+  data: {
+    content: Phrase[]
+  }
 }
 
 interface Phrase {

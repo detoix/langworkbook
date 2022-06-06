@@ -70,8 +70,10 @@ const getExercises = () =>
       "c1",
       "preterito indefinido"
     ],
-    content: [{text:"El otro dia me "}, {options: ["encontre, encontraba"]}, {text:" con Mariano cuando "}, {options: ["iba, fue"]}, {text:" a clase de Musica."}],
-    answer: ["encontre", "iba"]
+    data: {
+      content: [{text:"El otro dia me "}, {options: ["encontre, encontraba"]}, {text:" con Mariano cuando "}, {options: ["iba, fue"]}, {text:" a clase de Musica."}],
+      answer: ["encontre", "iba"]
+    }
   },
   {
     id: 1,
@@ -82,8 +84,10 @@ const getExercises = () =>
       "c1",
       "fill the gap"
     ],
-    content: [{text:"Florian is seit drei Monaten wieder "}, {letters: "INGSLE"}],
-    answer: ["Single"]
+    data: {
+      content: [{text:"Florian is seit drei Monaten wieder "}, {letters: "INGSLE"}],
+      answer: ["Single"]
+    }
   }
 ]
 

@@ -27,7 +27,7 @@ const Exercise = () => {
       {(exercise: Excercise) => (
         <div>
           <form onSubmit={event => handleSubmit({ studentId: 0, exerciseId: id }, event)}>
-            {exercise.content.map((phrase) => {
+            {exercise.data.content.map(phrase => {
               if (phrase.text) {
                 return phrase.text
               } else {

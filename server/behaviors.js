@@ -17,8 +17,8 @@ const filterMyExercises = (student, exercises) => {
 
 const solveExercise = (student, exercise, answer) => {
   let studentWithAttempt = Object.assign({}, student)
-  let correct = exercise.answer.filter((phrase, index) => phrase == answer[index]).length
-  let result = correct != 0 ? correct / exercise.answer.length : 0
+  let correct = exercise.data.answer.filter((phrase, index) => phrase == answer[index]).length
+  let result = correct != 0 ? correct / exercise.data.answer.length : 0
   let excerciseRecord = studentWithAttempt.exercises.find(exerciseRecord => exerciseRecord.id == exercise.id)
 
   if (excerciseRecord) {} else { excerciseRecord = { id: exercise.id, history: [] } }
