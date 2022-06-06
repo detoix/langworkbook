@@ -23,7 +23,7 @@ test("student can explore their exercises", () => {
   let myExercises = filterMyExercises(student, exercises)
 
   expect(myExercises).toMatchObject([
-    { id: 0, answer: [{}, {}], history: [{correct: 1}, {correct: 0.5}] },
+    { id: 0, data: { answer: [{}, {}] }, history: [{correct: 1}, {correct: 0.5}] },
     { id: 1 }])
 })
 
