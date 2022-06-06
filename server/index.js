@@ -30,10 +30,9 @@ app.get("/students/:studentId/exercises", (req, res) => {
 })
 
 app.get("/exercises/:exerciseId", (req, res) => {
-  let exercises = getExercises()
-  let exercise = exercises.find(e => e.id == req.params.exerciseId)
-
-  res.send(exercise)
+  pool.getExercise(req.params.exerciseId).then(payload => {
+    res.send(payload.rows[0])
+  })
 })
 
 app.post("/students/:studentId/exercises/:exerciseId", (req, res) => {

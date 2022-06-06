@@ -35,6 +35,10 @@ const createPool = () => {
     .connect()
     .then(client => client.query('SELECT * FROM exercises'))
 
+  pool.getExercise = id => pool
+    .connect()
+    .then(client => client.query('SELECT * FROM exercises WHERE id = $1', [id]))
+
   pool.createExercise = () => pool
     .connect()
     .then(client => client.query('INSERT INTO exercises(tags, content) VALUES ($1, $2)', [["a", "b"], {"xd": 13}]))
