@@ -26,7 +26,7 @@ app.get("/students/:studentId/exercises", (req, res) => {
 
 app.get("/exercises/:exerciseId", (req, res) => {
   pool.getExercise(req.params.exerciseId).then(payload => {
-    res.send(payload.rows[0])
+    res.send(payload)
   })
 })
 

@@ -95,13 +95,10 @@ const createPool = () => {
       console.log(response.error.stack)
     })
 
-  pool.getExercises = () => pool
-    .connect()
-    .then(client => client.query('SELECT * FROM exercises'))
+  pool.getExercises = () => pool.query('SELECT * FROM exercises')
 
   pool.getExercise = id => pool
-    .connect()
-    .then(client => client.query('SELECT * FROM exercises WHERE id = $1', [id]))
+    .query('SELECT * FROM exercises WHERE id = $1', [id])
     .then(data => data.rows[0])
 
   pool.createExercise = () => pool
