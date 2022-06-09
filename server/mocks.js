@@ -1,61 +1,58 @@
-const getStudents = () => 
+const getActions = () =>
 [
   {
     id: 0,
-    exercises:
-    [
-      {
-        id: 0,
-        history: [
-          {
-            datetime: "2002-12-12",
-            answer: ["encontre", "iba"],
-            correct: 1
-          },
-          {
-            datetime: "2002-12-10",
-            answer: ["encontre", "fue"],
-            correct: 0.5
-          }
-        ]
-      }
-    ]
+    student: 0,
+    exercise: 0,
+    result: {
+      answer: ["encontre", "iba"],
+      correct: 1
+    }
   },
   {
     id: 1,
-    exercises:
-    [
-      {
-        id: 0,
-        history: [
-          {
-            datetime: "2002-12-12",
-            answer: ["encontre", "iba"],
-            correct: 1
-          },
-          {
-            datetime: "2002-12-09",
-            answer: ["encontre", "fue"],
-            correct: 0.5
-          }
-        ]
-      },
-      {
-        id: 1,
-        history: [
-          {
-            datetime: "2002-12-13",
-            answer: ["Singl"],
-            correct: 0
-          },
-          {
-            datetime: "2002-12-08",
-            answer: [""],
-            correct: 0
-          }
-        ]
-      }
-    ]
+    student: 0,
+    exercise: 0,
+    result: {
+      answer: ["encontre", "fue"],
+      correct: 0.5
+    }
+  },
+  {
+    id: 2,
+    student: 1,
+    exercise: 0,
+    result: {
+      answer: ["encontre", "iba"],
+      correct: 1
+    }
+  },
+  {
+    id: 3,
+    student: 1,
+    exercise: 0,
+    result: {
+      answer: ["encontre", "fue"],
+      correct: 0.5
+    }
+  },
+  {
+    id: 4,
+    student: 1,
+    exercise: 1,
+    result: {
+      answer: ["Singl"],
+      correct: 0
+    }
+  },
+  {
+    id: 5,
+    student: 1,
+    exercise: 1,
+    result: {
+      answer: [""],
+      correct: 0
+    }
   }
 ]
 
@@ -92,6 +89,6 @@ const getExercises = () =>
 ]
 
 module.exports = {
-  getStudents,
+  getActions,
   getExercises
 }

@@ -1,5 +1,5 @@
 const { Pool } = require('pg')
-const { getStudents, getExercises } = require("./mocks")
+const { getExercises, getActions } = require("./mocks")
 
 const dropExercisesTable = client => new Promise((resolve, reject) => {
   client
@@ -62,26 +62,7 @@ const createActionsTable = client => new Promise((resolve, reject) => {
 const flattenActions = actions => actions.flatMap(action => [action.id, action.student, action.exercise, action.result])
 
 const insertActions = client => new Promise((resolve, reject) => {
-  let actions = [
-    {
-      id: 0,
-      student: 0,
-      exercise: 0,
-      result: {
-        answer: ["encontre", "iba"],
-        correct: 1
-      }
-    },
-    {
-      id: 1,
-      student: 0,
-      exercise: 0,
-      result: {
-        answer: ["encontre", "fue"],
-        correct: 0.5
-      }
-    }
-  ]
+  let actions = getActions()
   let flatMap = flattenActions(actions)
 
   let query = "INSERT INTO actions(id, student, exercise, result) VALUES " +
@@ -114,32 +95,6 @@ const createPool = () => {
       console.log(response.error.stack)
     })
 
-
-  // pool
-  //   .connect()
-  //   .then(client => client
-  //     .query('CREATE TABLE IF NOT EXISTS students ( \
-  //       id SERIAL PRIMARY KEY, \
-  //       takenBy integer[], \
-  //       tags text[], \
-  //       data jsonb \
-  //       )')
-  //     .then(res => {
-  //       getStudents().forEach(exercise => {
-  //         pool
-  //           .connect()
-  //           .then(client => {
-  //             return client.query('INSERT INTO exercises(id, takenBy, tags, data) \
-  //               VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING', [exercise.id, [], exercise.tags, exercise.data])})
-  //         })
-  //         client.release()
-  //       })
-  //     .catch(err => {
-  //       client.release()
-  //       console.log(err.stack)
-  //     })
-  //   )
-
   pool.getExercises = () => pool
     .connect()
     .then(client => client.query('SELECT * FROM exercises'))
@@ -147,6 +102,7 @@ const createPool = () => {
   pool.getExercise = id => pool
     .connect()
     .then(client => client.query('SELECT * FROM exercises WHERE id = $1', [id]))
+    .then(data => data.rows[0])
 
   pool.createExercise = () => pool
     .connect()

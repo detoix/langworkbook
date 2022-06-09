@@ -4,8 +4,7 @@ const bodyParser = require("body-parser")
 const app = express()
 const port = process.env.PORT || 8080
 
-const { getStudents, getExercises } = require("./mocks")
-const { filterMyExercises, solveExercise } = require("./behaviors")
+const { solveExercise } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
 const pool = createPool()
@@ -20,13 +19,9 @@ app.get("/exercises", (req, res) => {
 })
 
 app.get("/students/:studentId/exercises", (req, res) => {
-  let students = getStudents()
-  let student = students.find(x => x.id == req.params.studentId)
-  let exercises = getExercises()
-
-  let myExercises = filterMyExercises(student, exercises)
-
-  res.send(myExercises)
+  pool.getExercises().then(payload => {
+    res.send(payload.rows)
+  })
 })
 
 app.get("/exercises/:exerciseId", (req, res) => {
@@ -36,15 +31,13 @@ app.get("/exercises/:exerciseId", (req, res) => {
 })
 
 app.post("/students/:studentId/exercises/:exerciseId", (req, res) => {
-  let students = getStudents()
-  let student = students.find(x => x.id == req.params.studentId)
-  let exercises = getExercises()
-  let exercise = exercises.find(e => e.id == req.params.exerciseId)
-
-  let studentAfterExercise = solveExercise(student, exercise, req.body.answer)
-  
-  res.send(studentAfterExercise)
-  
+  pool.getExercise(req.params.exerciseId).then(exercise => {
+    let result = solveExercise(exercise, req.body.answer)
+    let response = {
+      answer: req.body.answer, result, student: req.params.studentId
+    }
+    res.send(response)
+  })
 })
 
 app.post("/exercises/:exerciseId", (req, res) => {
