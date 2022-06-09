@@ -18,7 +18,7 @@ app.get("/exercises", (req, res) => {
 })
 
 app.get("/students/:studentId/exercises", (req, res) => {
-  pool.getExercises().then(payload => {
+  pool.getMyExercises(req.params.studentId).then(payload => {
     res.send(payload.rows)
   })
 })
