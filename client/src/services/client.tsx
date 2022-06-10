@@ -1,24 +1,25 @@
 import axios from "axios"
+import { Excercise } from "../models/excercise"
 
 const url = "http://localhost:8080"
 
 const getExercises = async () => {
-  const res = await axios.get(url + "/exercises")
+  const res = await axios.get<Excercise[]>(url + "/exercises")
   return res.data
 }
 
 const getTags = async () => {
-  const res = await axios.get(url + "/tags")
+  const res = await axios.get<string[]>(url + "/tags")
   return res.data
 }
 
 const getMyExercises = async (props: any) => {
-  const res = await axios.get(url + "/students/" + props.id + "/exercises")
+  const res = await axios.get<Excercise[]>(url + "/students/" + props.id + "/exercises")
   return res.data
 }
 
 const getExercise = async (props: any) => {
-  const res = await axios.get(url + "/exercises/" + props.id)
+  const res = await axios.get<Excercise>(url + "/exercises/" + props.id)
   return res.data
 }
 

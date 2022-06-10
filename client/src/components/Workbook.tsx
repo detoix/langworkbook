@@ -9,7 +9,7 @@ const Exercises = () => (
     <Async.Fulfilled>
       {(exercises: Excercise[]) => (
         <div>
-          {exercises.map((exercise: Excercise) => 
+          {exercises.map(exercise => 
             <p>
               {exercise.id}. {exercise.tags.map(tag => <a href="">#{tag}</a>)} {exercise.data.content.map(phrase => phrase.text).join("_")} <Link to={"/exercises/" + exercise.id}>[take]</Link>
             </p>

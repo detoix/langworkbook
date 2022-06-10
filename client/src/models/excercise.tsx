@@ -1,9 +1,16 @@
-interface Excercise {
-  id: string
+interface IdCarrier {
+  id: number
+}
+
+interface NewExercise {
   tags: string[]
   data: {
     content: Phrase[]
+    answer: ""
   }
+}
+
+interface Excercise extends NewExercise, IdCarrier {
   attempts?: number
 }
 
@@ -13,4 +20,7 @@ interface Phrase {
   letters?: string
 }
 
-export type { Excercise }
+export type {
+  NewExercise, 
+  Excercise
+}
