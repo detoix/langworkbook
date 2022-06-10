@@ -17,6 +17,12 @@ app.get("/exercises", (req, res) => {
   })
 })
 
+app.get("/tags", (req, res) => {
+  pool.getTags().then(payload => {
+    res.send(payload)
+  })
+})
+
 app.get("/students/:studentId/exercises", (req, res) => {
   pool.getMyExercises(req.params.studentId)
     .then(payload => formatMyExercises(payload))

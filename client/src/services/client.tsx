@@ -7,6 +7,11 @@ const getExercises = async () => {
   return res.data
 }
 
+const getTags = async () => {
+  const res = await axios.get(url + "/tags")
+  return res.data
+}
+
 const getMyExercises = async (props: any) => {
   const res = await axios.get(url + "/students/" + props.id + "/exercises")
   return res.data
@@ -26,5 +31,6 @@ export {
   getMyExercises,
   getExercise,
   getExercises,
-  solveExcercise
+  solveExcercise,
+  getTags
 }
