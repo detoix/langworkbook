@@ -1,17 +1,23 @@
 interface IdCarrier {
-  id: number
+  id: any
+}
+
+interface ExerciseData {
+  content: Phrase[]
+  answer: string[]
 }
 
 interface NewExercise {
   tags: string[]
-  data: {
-    content: Phrase[]
-    answer: string[]
-  }
+  data: ExerciseData
 }
 
-interface Excercise extends NewExercise, IdCarrier {
+interface Excercise extends IdCarrier, NewExercise {
   attempts?: number
+}
+
+interface ExerciseSolution extends IdCarrier {
+  answer: string[]
 }
 
 interface Phrase {
@@ -21,6 +27,8 @@ interface Phrase {
 }
 
 export type {
+  IdCarrier,
   NewExercise, 
-  Excercise
+  Excercise,
+  ExerciseSolution
 }

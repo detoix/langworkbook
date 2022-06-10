@@ -23,8 +23,6 @@ const handleSubmit = (event: any) => {
 
   }
 
-  
-
   createExercise(exercise).then(response => console.log(response))
 
   event.preventDefault()
@@ -35,21 +33,15 @@ const NewExerciseForm = () => {
     <Async promiseFn={getTags}>
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
-        <form onSubmit={event => handleSubmit(event)}>
-          <input type="text" />
-          <input type="text" />
-          <input type="submit" value="Submit" />
-        </form>
-      {/* {(tags: string[]) => (
-        <div>
-          {tags.map((tag: string) => 
-            <p>
-              {tag}
-            </p>
-          )}
-        </div>
-      )} */}
-    </Async.Fulfilled>
+        {(tags: string[]) => (
+          <form onSubmit={event => handleSubmit(event)}>
+            <label>{tags.join(",")}</label>
+            <input type="text" />
+            <input type="text" />
+            <input type="submit" value="Submit" />
+          </form>
+        )}
+      </Async.Fulfilled>
       <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
     </Async>
   )

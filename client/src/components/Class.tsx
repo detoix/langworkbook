@@ -7,14 +7,14 @@ const Class = () => {
   const { id } = useParams()
 
   return (
-    <Async promiseFn={props => getMyExercises(props)} id={id}> {/* explicit syntax because otherwise component won't reload */}
+    <Async promiseFn={props => getMyExercises({id: props.id})} id={id}> {/* explicit syntax because otherwise component won't reload */}
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
         {(exercises: Excercise[]) => (
           <div>
             {exercises.map(exercise => 
               <p>
-                {exercise.id} {exercise.attempts} {exercise.data.content.map((x: any) => x.text).join("_")}<Link to={"/exercises/" + exercise.id}>take</Link>
+                {exercise.id} {exercise.attempts} {exercise.data.content.map(phrase => phrase.text).join("_")} <Link to={"/exercises/" + exercise.id}>[take]</Link>
               </p>
             )}
           </div>

@@ -21,7 +21,7 @@ const Exercise = () => {
   const { id } = useParams()
 
   return (
-    <Async promiseFn={getExercise} id={id}>
+    <Async promiseFn={props => getExercise({id: props.id})} id={id}>
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
       {(exercise: Excercise) => (
