@@ -1,5 +1,4 @@
 const formatMyExercises = (exercises) => {
-  
   let myExercises = []
 
   exercises.forEach(exercise => {
