@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
-const { solveExercise } = require("./behaviors")
+const { formatMyExercises, solveExercise } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
 const app = express()
@@ -13,14 +13,14 @@ app.use(bodyParser.json())
 
 app.get("/exercises", (req, res) => {
   pool.getExercises().then(payload => {
-    res.send(payload.rows)
+    res.send(payload)
   })
 })
 
 app.get("/students/:studentId/exercises", (req, res) => {
-  pool.getMyExercises(req.params.studentId).then(payload => {
-    res.send(payload.rows)
-  })
+  pool.getMyExercises(req.params.studentId)
+    .then(payload => formatMyExercises(payload))
+    .then(payload => res.send(payload))
 })
 
 app.get("/exercises/:exerciseId", (req, res) => {

@@ -1,8 +1,14 @@
-const filterMyExercises = (student, exercises) => {
-  let myExercises = student.exercises.map(excerciseRecord => {
-    let exercise = exercises.find(exercise => exercise.id == excerciseRecord.id)
+const formatMyExercises = (exercises) => {
+  
+  let myExercises = []
 
-    return Object.assign(exercise, excerciseRecord)
+  exercises.forEach(exercise => {
+    if (myExercises[exercise.id]) {
+      myExercises[exercise.id].count += 1
+    } else {
+      myExercises[exercise.id] = exercise
+      myExercises[exercise.id].count = 1
+    }
   })
 
   return myExercises
@@ -16,6 +22,6 @@ const solveExercise = (exercise, answer) => {
 }
 
 module.exports = {
-  filterMyExercises,
+  formatMyExercises,
   solveExercise,
 }

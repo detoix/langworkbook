@@ -104,11 +104,13 @@ const createPool = () => {
 
   pool.getExercises = () => pool
     .query("SELECT * FROM exercises")
+    .then(data => data.rows)
 
   pool.getMyExercises = student => pool
     .query("SELECT * FROM actions \
-      LEFT JOIN exercises ON actions.exercise = exercises.id \
+      LEFT JOIN exercises ON actions.exercise = exercises.id AND actions.student = $1 \
       WHERE student = $1", [student])
+      .then(data => data.rows)
 
   pool.getExercise = id => pool
     .query("SELECT * FROM exercises WHERE id = $1", [id])
