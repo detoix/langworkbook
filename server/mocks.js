@@ -60,7 +60,6 @@ const getExercises = () =>
 [
   {
     id: 0,
-    takenBy: [0, 0, 1, 1], //ids of users added every time
     tags:
     [
       "es",
@@ -74,7 +73,6 @@ const getExercises = () =>
   },
   {
     id: 1,
-    takenBy: [1, 1], //ids of users added every time
     tags:
     [
       "de",
