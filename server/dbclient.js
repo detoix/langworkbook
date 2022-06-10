@@ -88,6 +88,7 @@ const createPool = () => {
     .then(client => dropExercisesTable(client))
     .then(client => createExercisesTable(client))
     .then(client => insertExercises(client))
+    .then(client => fixPrimaryKeySequence(client, "exercises"))
     .then(client => dropActionsTable(client))
     .then(client => createActionsTable(client))
     .then(client => insertActions(client))
@@ -104,6 +105,10 @@ const createPool = () => {
   pool.getExercises = () => pool
     .query("SELECT * FROM exercises")
     .then(data => data.rows)
+
+  pool.createExercise = exercise => pool
+    .query("INSERT INTO exercises(tags, data) VALUES ($1, $2)", [exercise.tags, exercise.data])
+    .then(data => data)
 
   pool.getTags = () => pool
     .query("SELECT DISTINCT UNNEST(ARRAY_AGG(tags)) FROM exercises")

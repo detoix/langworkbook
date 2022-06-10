@@ -6,7 +6,7 @@ interface NewExercise {
   tags: string[]
   data: {
     content: Phrase[]
-    answer: ""
+    answer: string[]
   }
 }
 

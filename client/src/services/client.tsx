@@ -1,5 +1,5 @@
 import axios from "axios"
-import { Excercise } from "../models/excercise"
+import { Excercise, NewExercise } from "../models/excercise"
 
 const url = "http://localhost:8080"
 
@@ -28,10 +28,16 @@ const solveExcercise = async (student: any, exercise: any) => {
   return res.data
 }
 
+const createExercise = async (exercise: NewExercise) => {
+  const res = await axios.post(url + "/exercises", exercise)
+  return res.data
+}
+
 export {
   getMyExercises,
   getExercise,
   getExercises,
   solveExcercise,
-  getTags
+  getTags,
+  createExercise
 }

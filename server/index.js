@@ -53,8 +53,10 @@ app.post("/students/:studentId/exercises/:exerciseId", (req, res) => {
     })
 })
 
-app.post("/exercises/:exerciseId", (req, res) => {
-  //create new exercise
+app.post("/exercises", (req, res) => {
+  pool.createExercise(req.body).then(payload => {
+    res.send(payload)
+  })
 })
 
 app.listen(port, () => {

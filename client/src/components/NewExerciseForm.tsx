@@ -1,5 +1,5 @@
 import Async from "react-async"
-import { getTags } from "../services/client"
+import { getTags, createExercise } from "../services/client"
 import { NewExercise } from "../models/excercise"
 
 const handleSubmit = (event: any) => {
@@ -8,7 +8,7 @@ const handleSubmit = (event: any) => {
     tags: [],
     data: {
       content: [],
-      answer: ""
+      answer: []
     }
   }
 
@@ -17,13 +17,15 @@ const handleSubmit = (event: any) => {
     if (index == 0) {
       exercise.data.content.push({text: event.target[index].value})
     } else {
-      exercise.data.answer = event.target[index].value
+      exercise.data.answer.push(event.target[index].value)
       exercise.data.content.push({letters: event.target[index].value.split("").reverse().join("")})
     }
 
   }
 
-  console.log(exercise)
+  
+
+  createExercise(exercise).then(response => console.log(response))
 
   event.preventDefault()
 }
