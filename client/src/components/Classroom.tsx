@@ -12,9 +12,9 @@ const Classroom = () => {
       <Async.Fulfilled>
         {(exercises: Excercise[]) => (
           <div>
-            {exercises.map(e => 
+            {exercises.map(exercise => 
               <p>
-                {e.id} {e.count} {e.data.content.map((x: any) => x.text).join("_")}<Link to={"/exercises/" + e.id}>take</Link>
+                {exercise.id} {exercise.attempts} {exercise.data.content.map((x: any) => x.text).join("_")}<Link to={"/exercises/" + exercise.id}>take</Link>
               </p>
             )}
           </div>

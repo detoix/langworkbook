@@ -53,6 +53,15 @@ const getActions = () =>
       answer: [""],
       correct: 0
     }
+  },
+  {
+    id: 6,
+    student: 1,
+    exercise: 1,
+    result: {
+      answer: ["Single"],
+      correct: 1
+    }
   }
 ]
 

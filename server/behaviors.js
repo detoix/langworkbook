@@ -3,10 +3,10 @@ const formatMyExercises = (exercises) => {
 
   exercises.forEach(exercise => {
     if (myExercises[exercise.id]) {
-      myExercises[exercise.id].count += 1
+      myExercises[exercise.id].attempts += 1
     } else {
       myExercises[exercise.id] = exercise
-      myExercises[exercise.id].count = 1
+      myExercises[exercise.id].attempts = 1
     }
   })
 

@@ -4,7 +4,7 @@ interface Excercise {
   data: {
     content: Phrase[]
   }
-  count?: number
+  attempts?: number
 }
 
 interface Phrase {

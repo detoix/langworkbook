@@ -1,5 +1,5 @@
-const { getStudents, getExercises, getActions } = require("./mocks")
-const { filterMyExercises, solveExercise } = require("./behaviors")
+const { getExercises, getActions } = require("./mocks")
+const { solveExercise } = require("./behaviors")
 
 test("visitor can browse all excercises", () => {
   //todo
