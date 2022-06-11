@@ -4,7 +4,12 @@ import { NewExercise } from "../models/excercise"
 
 const actions = [
   (exercise: NewExercise, input: string) => exercise.tags = input.split(", "),
-  (exercise: NewExercise, input: string) => exercise.data.content.push({text: input}),
+
+  (exercise: NewExercise, input: string) => {
+    if (input) {
+      exercise.data.content.push({text: input})
+    }
+  },
   (exercise: NewExercise, input: string) => {
     if (input) {
       let last = exercise.data.content.pop()
@@ -14,7 +19,11 @@ const actions = [
   },
   (exercise: NewExercise, input: string) => {},
 
-  (exercise: NewExercise, input: string) => exercise.data.content.push({text: input}),
+  (exercise: NewExercise, input: string) => {
+    if (input) {
+      exercise.data.content.push({text: input})
+    }
+  },
   (exercise: NewExercise, input: string) => {
     if (input) {
       let last = exercise.data.content.pop()
@@ -23,7 +32,11 @@ const actions = [
     }
   },
   (exercise: NewExercise, input: string) => {},
-  (exercise: NewExercise, input: string) => exercise.data.content.push({text: input}),
+  (exercise: NewExercise, input: string) => {
+    if (input) {
+      exercise.data.content.push({text: input})
+    }
+  },
   (exercise: NewExercise, input: string) => {
     if (input) {
       let last = exercise.data.content.pop()
@@ -32,7 +45,11 @@ const actions = [
     }
   },
   (exercise: NewExercise, input: string) => {},
-  (exercise: NewExercise, input: string) => exercise.data.content.push({text: input}),
+  (exercise: NewExercise, input: string) => {
+    if (input) {
+      exercise.data.content.push({text: input})
+    }
+  },
   (exercise: NewExercise, input: string) => {
     if (input) {
       let last = exercise.data.content.pop()
@@ -41,7 +58,11 @@ const actions = [
     }
   },
   (exercise: NewExercise, input: string) => {},
-  (exercise: NewExercise, input: string) => exercise.data.content.push({text: input}),
+  (exercise: NewExercise, input: string) => {
+    if (input) {
+      exercise.data.content.push({text: input})
+    }
+  },
   (exercise: NewExercise, input: string) => {
     if (input) {
       let last = exercise.data.content.pop()

@@ -1,5 +1,5 @@
 const formatMyExercises = (exercises) => {
-  let myExercises = []
+  let myExercises = {}
 
   exercises.forEach(exercise => {
     if (myExercises[exercise.id]) {
@@ -10,7 +10,7 @@ const formatMyExercises = (exercises) => {
     }
   })
 
-  return myExercises
+  return Object.values(myExercises)
 }
 
 const solveExercise = (exercise, answer) => {

@@ -111,7 +111,7 @@ const createPool = () => {
     .then(data => data)
 
   pool.getTags = () => pool
-    .query("SELECT DISTINCT UNNEST(ARRAY_AGG(tags)) FROM exercises")
+    .query("SELECT DISTINCT UNNEST(tags) FROM exercises")
     .then(data => data.rows.map(row => row.unnest))
 
   pool.getMyExercises = student => pool
