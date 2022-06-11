@@ -127,6 +127,10 @@ const createPool = () => {
   pool.submitAction = action => pool
     .query("INSERT INTO actions(student, exercise, result) VALUES ($1, $2, $3)", [action.student, action.exercise, action.result])
 
+  pool.updateExercise = id => pool
+    .query("UPDATE exercises SET tags = $1, data = $2 \
+      WHERE id = $3 AND id NOT IN (SELECT exercise FROM actions)", [null, null, id])
+
   return pool
 }
 
