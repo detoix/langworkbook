@@ -1,23 +1,8 @@
 import Async from "react-async"
-import { Link, useSearchParams, useNavigate, NavigateFunction } from "react-router-dom"
+import { Link, useSearchParams, useNavigate } from "react-router-dom"
 import { getExercises } from "../services/client"
+import { redirectWith } from "../services/redirect"
 import { Excercise } from "../models/excercise"
-import { Query } from "../models/query"
-
-const foo = (
-  searchParams: URLSearchParams,
-  setSearchParams: any,
-  navigate: NavigateFunction,
-  query: Query
-  ) => {
-
-  let params = new URLSearchParams(searchParams.toString());
-  params.set('offset', query.offset.toString());
-  params.set('limit', query.limit.toString());
-
-  setSearchParams(params.toString());
-  navigate({ search: params.toString() })
-}
 
 const Exercises = () => {
 
@@ -42,9 +27,9 @@ const Exercises = () => {
 
             <button onClick={event => {
               event.preventDefault()
-              foo(searchParams, setSearchParams, navigate, {offset: Math.max(query.offset - query.limit, 0), limit: query.limit})
+              redirectWith(searchParams, setSearchParams, navigate, {offset: Math.max(query.offset - query.limit, 0), limit: query.limit})
             }}>prev</button>
-            <select defaultValue={query.limit} onChange={event => foo(searchParams, setSearchParams, navigate, {offset: query.offset, limit: Number(event.target.value)})}>
+            <select defaultValue={query.limit} onChange={event => redirectWith(searchParams, setSearchParams, navigate, {offset: query.offset, limit: Number(event.target.value)})}>
               <option>1</option>
               <option>10</option>
               <option>25</option>
@@ -52,7 +37,7 @@ const Exercises = () => {
             </select>
             <button onClick={event => {
               event.preventDefault()
-              foo(searchParams, setSearchParams, navigate, {offset: query.offset + query.limit, limit: query.limit})
+              redirectWith(searchParams, setSearchParams, navigate, {offset: query.offset + query.limit, limit: query.limit})
             }}>next</button>
 
           </div>

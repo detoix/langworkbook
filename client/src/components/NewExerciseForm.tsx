@@ -1,6 +1,7 @@
 import Async from "react-async"
 import { useSearchParams, useNavigate } from "react-router-dom"
 import { getTags, createExercise } from "../services/client"
+import { redirectWith } from "../services/redirect"
 import { NewExercise } from "../models/excercise"
 
 const defaultPhrases = [
@@ -133,13 +134,10 @@ const NewExerciseForm = () => {
                 </div>
               )}
 
-              <button onClick={event => { 
+              <button onClick={event => {
                 event.preventDefault()
-                let params = new URLSearchParams(searchParams.toString());
-                params.set('phrases', (phrasesCount + 1).toString());
-                setSearchParams(params.toString());
-                navigate('/exercises/new?'+params.toString())
-                }}>+</button>
+                redirectWith(searchParams, setSearchParams, navigate, { phrases: (phrasesCount + 1) })
+              }}>+</button>
 
               <input type="submit" value="Submit" />
             </form>
