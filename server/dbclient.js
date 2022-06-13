@@ -102,8 +102,8 @@ const createPool = () => {
       console.log(response.error.stack)
     })
 
-  pool.getExercises = () => pool
-    .query("SELECT * FROM exercises")
+  pool.getExercises = (limit, offset) => pool
+    .query("SELECT * FROM exercises LIMIT $1 OFFSET $2", [limit, offset])
     .then(data => data.rows)
 
   pool.createExercise = exercise => pool

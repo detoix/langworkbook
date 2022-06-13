@@ -12,7 +12,7 @@ app.use(cors())
 app.use(bodyParser.json())
 
 app.get("/exercises", (req, res) => {
-  pool.getExercises().then(payload => {
+  pool.getExercises(req.query.limit || 10, req.query.offset || 0).then(payload => {
     res.send(payload)
   })
 })

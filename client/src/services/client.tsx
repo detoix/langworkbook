@@ -1,10 +1,11 @@
 import axios from "axios"
 import { IdCarrier, Excercise, NewExercise, ExerciseSolution } from "../models/excercise"
+import { Query } from "../models/query"
 
 const url = "http://localhost:8080"
 
-const getExercises = async () => {
-  const res = await axios.get<Excercise[]>(url + "/exercises")
+const getExercises = async (query: Query) => {
+  const res = await axios.get<Excercise[]>(url + `/exercises?offset=${query.offset}&limit=${query.limit || 10}`)
   return res.data
 }
 
