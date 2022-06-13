@@ -107,7 +107,7 @@ const NewExerciseForm = () => {
 
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const phrasesCount = Number(searchParams.get("phrases") || "0")
+  const phrasesCount = Number(searchParams.get("phrases")) || 1
 
   return (
     <Async promiseFn={getTags}>
@@ -125,7 +125,7 @@ const NewExerciseForm = () => {
                 <label>Exercise:</label>
               </div>
 
-              {Array.from({length: phrasesCount}, (x, i) => 
+              {Array.from({length: phrasesCount}, (_, i) => 
                 <div>
                   <input type="text" placeholder={defaultPhrases[i]} />
                   <input type="text" placeholder="letters" />

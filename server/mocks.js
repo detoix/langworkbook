@@ -93,6 +93,18 @@ const getExercises = () =>
       content: [{text:"Florian is seit drei Monaten wieder "}, {letters: "INGSLE"}],
       answer: ["Single"]
     }
+  },
+  {
+    id: 2,
+    tags:
+    [
+      "de",
+      "c1",
+    ],
+    data: {
+      content: [{text:"Florian is seit drei Monaten wieder "}, {}],
+      answer: ["weg"]
+    }
   }
 ]
 
