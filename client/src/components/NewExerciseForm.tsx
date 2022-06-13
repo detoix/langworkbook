@@ -1,6 +1,15 @@
 import Async from "react-async"
+import { useSearchParams, useNavigate } from "react-router-dom"
 import { getTags, createExercise } from "../services/client"
 import { NewExercise } from "../models/excercise"
+
+const defaultPhrases = [
+  "Florian ist seit",
+  "drei",
+  "Monaten wieder Single,",
+  "aber",
+  "er freut sich."
+]
 
 const actions = [
   (exercise: NewExercise, input: string) => exercise.tags = input.split(", "),
@@ -75,6 +84,7 @@ const actions = [
 
 //this is ridiculous, but the purpose is to avoid any sort of state
 const handleSubmit = (event: any) => {
+  event.preventDefault()
 
   let exercise: NewExercise = {
     tags: [],
@@ -90,50 +100,50 @@ const handleSubmit = (event: any) => {
     }
   }
 
-  console.log(exercise)
-
   createExercise(exercise).then(response => console.log(response))
-
-  event.preventDefault()
 }
 
 const NewExerciseForm = () => {
+
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const phrasesCount = Number(searchParams.get("phrases") || "0")
+
   return (
     <Async promiseFn={getTags}>
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
         {(tags: string[]) => (
-          <form onSubmit={event => handleSubmit(event)}  style={{display: 'flex'}}>
-            <div>
-              <input type="text" placeholder={tags.join(", ")} />
-            </div>
-            <div>
-              <input type="text" placeholder="Florian ist seit" />
-              <input type="text" />
-              <input type="text" />
-            </div>
-            <div>
-              <input type="text" placeholder="drei" />
-              <input type="text" placeholder="RDIE" />
-              <input type="text" />
-            </div>
-            <div>
-              <input type="text" placeholder="Monaten wieder Single," />
-              <input type="text" />
-              <input type="text" />
-            </div>
-            <div>
-              <input type="text" placeholder="aber" />
-              <input type="text" />
-              <input type="text" placeholder="sonst, vielleicht" />
-            </div>
-            <div>
-              <input type="text" placeholder="er freut sich." />
-              <input type="text" />
-              <input type="text" />
-            </div>
-            <input type="submit" value="Submit" />
-          </form>
+          <div>
+            <form onSubmit={event => handleSubmit(event)} style={{display: 'flex'}}>
+              <div> 
+                <label>Tags:</label>
+                <input type="text" placeholder={tags.join(", ")} />
+              </div>
+
+              <div>
+                <label>Exercise:</label>
+              </div>
+
+              {Array.from({length: phrasesCount}, (x, i) => 
+                <div>
+                  <input type="text" placeholder={defaultPhrases[i]} />
+                  <input type="text" placeholder="letters" />
+                  <input type="text" placeholder="sth" />
+                </div>
+              )}
+
+              <button onClick={event => { 
+                event.preventDefault()
+                let params = new URLSearchParams(searchParams.toString());
+                params.set('phrases', (phrasesCount + 1).toString());
+                setSearchParams(params.toString());
+                navigate('/exercises/new?'+params.toString())
+                }}>+</button>
+
+              <input type="submit" value="Submit" />
+            </form>
+          </div>
         )}
       </Async.Fulfilled>
       <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
