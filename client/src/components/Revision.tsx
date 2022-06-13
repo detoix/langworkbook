@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom"
 import { getMyExercises } from "../services/client"
 import { Excercise } from "../models/excercise"
 
-const Class = () => {
+const Revision = () => {
   const { id } = useParams()
 
   return (
@@ -25,4 +25,4 @@ const Class = () => {
   )
 }
 
-export default Class
+export default Revision

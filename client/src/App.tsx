@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom"
 import Workbook from "./components/Workbook"
 import Excercise from "./components/Exercise"
-import Class from "./components/Class"
+import Revision from "./components/Revision"
 import NewExerciseForm from "./components/NewExerciseForm"
 
 const App = () => {
@@ -16,7 +16,7 @@ const App = () => {
         <Route path="/workbook" element={<Workbook />} />
         <Route path="/exercises/new" element={<NewExerciseForm />} />
         <Route path="/exercises/:id" element={<Excercise />} />
-        <Route path="/students/:id" element={<Class />} />
+        <Route path="/students/:id" element={<Revision />} />
       </Routes>
     </BrowserRouter>
   )
