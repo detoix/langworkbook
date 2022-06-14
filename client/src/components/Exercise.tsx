@@ -1,12 +1,12 @@
 import Async from "react-async"
-import { useParams, useSearchParams, useNavigate, NavigateFunction } from "react-router-dom"
+import { useParams, useSearchParams, useNavigate, NavigateFunction, Link } from "react-router-dom"
 import { Excercise, ExerciseSolution, IdCarrier } from "../models/excercise"
 import { getExercise, solveExcercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 
 const handleSubmit = (student: IdCarrier, exercise: ExerciseSolution, navigate: NavigateFunction) => {
   solveExcercise(student, exercise).then(e => {
-    let query = buildQueryParams(new URLSearchParams(), { answer: e.result.answer, correctAnswer: e.result.correctAnswer })
+    let query = buildQueryParams(new URLSearchParams(), { answer: e.result.answer, correctAnswer: e.result.correctAnswer, next: e.next })
     navigate({search: query})
   })
 }
@@ -17,6 +17,7 @@ const Exercise = () => {
   const [searchParams] = useSearchParams()
   const answer = searchParams.get("answer")?.split(",")
   const correctAnswer = searchParams.get("correctAnswer")?.split(",")
+  const next = searchParams.get("next")
 
   return (
     <Async promiseFn={props => getExercise({id: props.id})} id={id}>
@@ -49,7 +50,7 @@ const Exercise = () => {
                   if (phraseAnswer === phraseCorrectAnswer) {
                     return <span><b>{phraseCorrectAnswer}</b></span>
                   } else {
-                    return <span><del>{phraseAnswer}</del> {phraseCorrectAnswer}</span>
+                    return <span> <del>{phraseAnswer}</del> {phraseCorrectAnswer} </span>
                   }
                 } else {
                   return <div><input type="text" /><label>{JSON.stringify(phrase.options ?? phrase.letters)}</label></div>
@@ -57,6 +58,7 @@ const Exercise = () => {
               })
             })}
             {!answer && !correctAnswer && <input type="submit" value="Submit" />}
+            {next && <Link to={"/exercises/" + next}><button>next</button></Link>}
           </form>
         </div>
       )}

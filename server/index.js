@@ -44,19 +44,25 @@ app.get("/exercises/:exerciseId", (req, res) => {
 })
 
 app.post("/students/:studentId/exercises/:exerciseId", (req, res) => {
+  let action = {
+    student: req.params.studentId,
+    exercise: req.params.exerciseId,
+    result: {
+      answer: req.body.answer,
+    }
+  }
+
   pool.getExercise(req.params.exerciseId)
-    .then(exercise => (
-      {
-        student: req.params.studentId,
-        exercise: req.params.exerciseId,
-        result: {
-          answer: req.body.answer,
-          correctAnswer: exercise.data.answer
-        }
-      }
-    ))
-    .then(action => {
-      pool.submitAction(action)
+    .then(exercise => {
+      action.result.correctAnswer = exercise.data.answer
+
+      return action
+    })
+    .then(action => pool.submitAction(action))
+    .then(_ => pool.getMyExercises(req.params.studentId))
+    .then(payload => formatMyExercises(payload))
+    .then(payload => {
+      action.next = payload.shift().id
       res.send(action)
     })
 })
