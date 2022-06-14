@@ -10,7 +10,10 @@ const formatMyExercises = (exercises) => {
     }
   })
 
-  return Object.values(myExercises)
+  let result = Object.values(myExercises)
+    .sort((a, b) => Math.sign(a.attempts - b.attempts))
+
+  return result
 }
 
 const evaluate = (exercise, answer) => {
