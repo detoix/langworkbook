@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
-const { formatMyExercises, solveExercise } = require("./behaviors")
+const { formatMyExercises } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
 const app = express()
@@ -51,7 +51,7 @@ app.post("/students/:studentId/exercises/:exerciseId", (req, res) => {
         exercise: req.params.exerciseId,
         result: {
           answer: req.body.answer,
-          correct: solveExercise(exercise, req.body.answer)
+          correctAnswer: exercise.data.answer
         }
       }
     ))

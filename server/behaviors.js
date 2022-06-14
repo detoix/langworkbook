@@ -13,7 +13,7 @@ const formatMyExercises = (exercises) => {
   return Object.values(myExercises)
 }
 
-const solveExercise = (exercise, answer) => {
+const evaluate = (exercise, answer) => {
   let correct = exercise.data.answer.filter((phrase, index) => phrase == answer[index]).length
   let result = correct != 0 ? correct / exercise.data.answer.length : 0
 
@@ -22,5 +22,5 @@ const solveExercise = (exercise, answer) => {
 
 module.exports = {
   formatMyExercises,
-  solveExercise,
+  evaluate,
 }

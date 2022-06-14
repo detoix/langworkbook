@@ -6,7 +6,7 @@ const getActions = () =>
     exercise: 0,
     result: {
       answer: ["encontre", "iba"],
-      correct: 1
+      correctAnswer: ["encontre", "iba"],
     }
   },
   {
@@ -15,7 +15,7 @@ const getActions = () =>
     exercise: 0,
     result: {
       answer: ["encontre", "fue"],
-      correct: 0.5
+      correctAnswer: ["encontre", "iba"],
     }
   },
   {
@@ -24,7 +24,7 @@ const getActions = () =>
     exercise: 0,
     result: {
       answer: ["encontre", "iba"],
-      correct: 1
+      correctAnswer: ["encontre", "iba"],
     }
   },
   {
@@ -33,7 +33,7 @@ const getActions = () =>
     exercise: 0,
     result: {
       answer: ["encontre", "fue"],
-      correct: 0.5
+      correctAnswer: ["encontre", "iba"],
     }
   },
   {
@@ -42,7 +42,7 @@ const getActions = () =>
     exercise: 1,
     result: {
       answer: ["Singl"],
-      correct: 0
+      correctAnswer: ["Single"],
     }
   },
   {
@@ -51,7 +51,7 @@ const getActions = () =>
     exercise: 1,
     result: {
       answer: [""],
-      correct: 0
+      correctAnswer: ["Single"],
     }
   },
   {
@@ -60,7 +60,16 @@ const getActions = () =>
     exercise: 1,
     result: {
       answer: ["Single"],
-      correct: 1
+      correctAnswer: ["Single"],
+    }
+  },
+  {
+    id: 7,
+    student: 0,
+    exercise: 3,
+    result: {
+      answer: ["der"],
+      correctAnswer: ["red"],
     }
   }
 ]
@@ -102,8 +111,20 @@ const getExercises = () =>
       "c1",
     ],
     data: {
-      content: [{text:"Florian is seit drei Monaten wieder "}, {}],
-      answer: ["weg"]
+      content: [{text:"Annika ist sehr"}, {}, {text:"."}],
+      answer: ["krank"]
+    }
+  },
+  {
+    id: 3,
+    tags:
+    [
+      "en",
+      "a1",
+    ],
+    data: {
+      content: [{text:"I have a"}, {letters: "dre"}, {text:"car."}],
+      answer: ["red"]
     }
   }
 ]

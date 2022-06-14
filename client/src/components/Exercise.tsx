@@ -1,24 +1,22 @@
 import Async from "react-async"
-import { useParams } from "react-router-dom"
-import { Excercise } from "../models/excercise"
+import { useParams, useSearchParams, useNavigate, NavigateFunction } from "react-router-dom"
+import { Excercise, ExerciseSolution, IdCarrier } from "../models/excercise"
 import { getExercise, solveExcercise } from "../services/client"
+import { buildQueryParams } from "../services/buildQueryParams"
 
-const handleSubmit = (context: any, event: any) => {
-  let answer = []
-
-  for (let index = 0; index < event.target.length - 1; index++) {
-    answer.push(event.target[index].value)
-  }
-
-  solveExcercise({ id: 0 }, { id: context.exerciseId, answer: answer }).then(e => {
-    console.log(e)
+const handleSubmit = (student: IdCarrier, exercise: ExerciseSolution, navigate: NavigateFunction) => {
+  solveExcercise(student, exercise).then(e => {
+    let query = buildQueryParams(new URLSearchParams(), { answer: e.result.answer, correctAnswer: e.result.correctAnswer })
+    navigate({search: query})
   })
-
-  event.preventDefault()
 }
 
 const Exercise = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const answer = searchParams.get("answer")?.split(",")
+  const correctAnswer = searchParams.get("correctAnswer")?.split(",")
 
   return (
     <Async promiseFn={props => getExercise({id: props.id})} id={id}>
@@ -26,15 +24,39 @@ const Exercise = () => {
       <Async.Fulfilled>
       {(exercise: Excercise) => (
         <div>
-          <form onSubmit={event => handleSubmit({ studentId: 0, exerciseId: id }, event)}>
-            {exercise.data.content.map(phrase => {
-              if (phrase.text) {
-                return phrase.text
-              } else {
-                return <div><input type="text" /><label>{JSON.stringify(phrase.options ?? phrase.letters)}</label></div>
-              }
+          <form onSubmit={event => { 
+            event.preventDefault()
+
+            let answer: string[] = []
+
+            for (let index = 0; index < event.currentTarget.elements.length - 1; index++) {
+              answer.push((event.currentTarget.elements[index] as HTMLInputElement).value)
+            }
+            
+            handleSubmit({ id: 0 }, { id: id, answer: answer }, navigate)
+          }}>
+            {Array.from({length: 1}, (_, i) => { 
+              let answerCopy = [...(answer || [])]
+              let correctAnswerCopy = [...(correctAnswer || [])]
+
+              return exercise.data.content.map((phrase, index) => {
+                if (phrase.text) {
+                  return phrase.text
+                } else if (answer && correctAnswer) {
+                  let phraseAnswer = answerCopy.shift()
+                  let phraseCorrectAnswer = correctAnswerCopy.shift()
+
+                  if (phraseAnswer === phraseCorrectAnswer) {
+                    return <span><b>{phraseCorrectAnswer}</b></span>
+                  } else {
+                    return <span><del>{phraseAnswer}</del> {phraseCorrectAnswer}</span>
+                  }
+                } else {
+                  return <div><input type="text" /><label>{JSON.stringify(phrase.options ?? phrase.letters)}</label></div>
+                }
+              })
             })}
-            <input type="submit" value="Submit" />
+            {!answer && !correctAnswer && <input type="submit" value="Submit" />}
           </form>
         </div>
       )}
