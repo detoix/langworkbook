@@ -5,7 +5,12 @@ import { Query } from "../models/query"
 const url = "http://localhost:8080"
 
 const getExercises = async (query: Query) => {
-  const res = await axios.get<Excercise[]>(url + `/exercises?offset=${query.offset}&limit=${query.limit || 10}`)
+  const searchParams = new URLSearchParams()
+  searchParams.set("offset", query.offset.toString())
+  searchParams.set("limit", (query.limit || 10).toString())
+  searchParams.set("tags", query.tags.toString())
+
+  const res = await axios.get<Excercise[]>(url + "/exercises?" + searchParams.toString())
   return res.data
 }
 

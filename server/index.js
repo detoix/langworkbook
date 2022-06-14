@@ -12,7 +12,15 @@ app.use(cors())
 app.use(bodyParser.json())
 
 app.get("/exercises", (req, res) => {
-  pool.getExercises(req.query.limit || 10, req.query.offset || 0).then(payload => {
+  let tags = req.query.tags && req.query.tags.split(",").length
+    ? req.query.tags.split(",")
+    : []
+
+  pool.getExercises(
+    req.query.limit || 10,
+    req.query.offset || 0,
+    tags).then(payload => 
+  {
     res.send(payload)
   })
 })

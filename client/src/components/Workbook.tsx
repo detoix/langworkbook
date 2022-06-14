@@ -10,7 +10,8 @@ const Exercises = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const query = {
     offset: Number(searchParams.get("offset")),
-    limit: Number(searchParams.get("limit"))
+    limit: Number(searchParams.get("limit")),
+    tags: (searchParams.get("tags") || "").split(",")
   }
 
   return (

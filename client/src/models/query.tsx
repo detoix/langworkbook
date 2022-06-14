@@ -1,6 +1,7 @@
 interface Query {
   offset: number
-  limit: number
+  limit: number,
+  tags: string[]
 }
 
 export type {

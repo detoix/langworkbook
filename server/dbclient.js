@@ -102,8 +102,11 @@ const createPool = () => {
       console.log(response.error.stack)
     })
 
-  pool.getExercises = (limit, offset) => pool
-    .query("SELECT * FROM exercises LIMIT $1 OFFSET $2", [limit, offset])
+  pool.getExercises = (limit, offset, tags) => pool
+    .query("SELECT * FROM exercises \
+      WHERE tags @> $1::text[] \
+      LIMIT $2 \
+      OFFSET $3", [tags, limit, offset])
     .then(data => data.rows)
 
   pool.createExercise = exercise => pool
