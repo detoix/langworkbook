@@ -1,5 +1,15 @@
 import { NavigateFunction } from "react-router-dom"
 
+const concatQuery = (searchParams: URLSearchParams, query: any) => {
+  let existingParams = new URLSearchParams(searchParams.toString());
+
+  Object.keys(query).forEach(key => {
+    existingParams.set(key, query[key].toString())
+  })
+
+  return existingParams.toString() 
+}
+
 const redirectWith = (
   searchParams: URLSearchParams,
   setSearchParams: any,
@@ -18,5 +28,6 @@ const redirectWith = (
 }
 
 export {
+  concatQuery,
   redirectWith
 }
