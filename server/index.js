@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
-const { formatMyExercises } = require("./behaviors")
+const { projectionOf } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
 const app = express()
@@ -33,8 +33,8 @@ app.get("/tags", (req, res) => {
 
 app.get("/students/:studentId/exercises", (req, res) => {
   pool.getMyExercises(req.params.studentId)
-    .then(payload => formatMyExercises(payload))
-    .then(payload => res.send(payload))
+    .then(exercises => projectionOf(exercises))
+    .then(projection => res.send(projection))
 })
 
 app.get("/exercises/:exerciseId", (req, res) => {
@@ -60,9 +60,9 @@ app.post("/students/:studentId/exercises/:exerciseId", (req, res) => {
     })
     .then(action => pool.submitAction(action))
     .then(_ => pool.getMyExercises(req.params.studentId))
-    .then(payload => formatMyExercises(payload))
-    .then(payload => {
-      action.next = payload.shift().id
+    .then(exercises => projectionOf(exercises))
+    .then(projection => {
+      action.next = projection.shift().id
       res.send(action)
     })
 })

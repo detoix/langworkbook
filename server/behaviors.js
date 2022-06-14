@@ -1,4 +1,4 @@
-const formatMyExercises = (exercises) => {
+const projectionOf = (exercises) => {
   let myExercises = {}
 
   exercises.forEach(exercise => {
@@ -24,6 +24,6 @@ const evaluate = (exercise, answer) => {
 }
 
 module.exports = {
-  formatMyExercises,
+  projectionOf,
   evaluate,
 }
