@@ -7,7 +7,7 @@ const url = "http://localhost:8080"
 const getExercises = async (query: Query) => {
   const searchParams = new URLSearchParams()
   searchParams.set("offset", query.offset.toString())
-  searchParams.set("limit", (query.limit || 10).toString())
+  searchParams.set("limit", query.limit.toString())
   searchParams.set("tags", query.tags.toString())
 
   const res = await axios.get<Excercise[]>(url + "/exercises?" + searchParams.toString())

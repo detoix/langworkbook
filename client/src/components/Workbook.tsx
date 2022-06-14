@@ -4,14 +4,25 @@ import { getExercises } from "../services/client"
 import { redirectWith } from "../services/redirect"
 import { Excercise } from "../models/excercise"
 
+const target = (searchParams: URLSearchParams, query: any) => {
+
+  let params = new URLSearchParams(searchParams.toString());
+
+  Object.keys(query).forEach(key => {
+    params.set(key, query[key].toString())
+  })
+
+  return params.toString() 
+}
+
 const Exercises = () => {
 
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const query = {
     offset: Number(searchParams.get("offset")),
-    limit: Number(searchParams.get("limit")),
-    tags: (searchParams.get("tags") || "").split(",")
+    limit: Number(searchParams.get("limit")) || 10,
+    tags: searchParams.get("tags")?.split(",") || []
   }
 
   return (
@@ -22,24 +33,22 @@ const Exercises = () => {
           <div>
             {exercises.map(exercise => 
               <p key={exercise.id}>
-                {exercise.id}. {exercise.tags.map(tag => <a href="/workbook">#{tag}</a>)} {exercise.data.content.map(phrase => phrase.text).join("_")} <Link to={"/exercises/" + exercise.id}>[take]</Link>
+                {exercise.id}. {exercise.tags.map(tag => <Link to={{search: target(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link>)} {exercise.data.content.map(phrase => phrase.text).join("_")} <Link to={"/exercises/" + exercise.id}>[take]</Link>
               </p>
             )}
 
-            <button onClick={event => {
-              event.preventDefault()
-              redirectWith(searchParams, setSearchParams, navigate, {offset: Math.max(query.offset - query.limit, 0), limit: query.limit})
-            }}>prev</button>
+            <Link to={{search: target(searchParams, {offset: Math.max(query.offset - query.limit, 0), limit: query.limit})}}>
+              <button>prev</button>
+            </Link>
             <select defaultValue={query.limit} onChange={event => redirectWith(searchParams, setSearchParams, navigate, {offset: query.offset, limit: Number(event.target.value)})}>
               <option>1</option>
               <option>10</option>
               <option>25</option>
               <option>50</option>
             </select>
-            <button onClick={event => {
-              event.preventDefault()
-              redirectWith(searchParams, setSearchParams, navigate, {offset: query.offset + query.limit, limit: query.limit})
-            }}>next</button>
+            <Link to={{search: target(searchParams, {offset: query.offset + query.limit, limit: query.limit})}}>
+              <button>next</button>
+            </Link>
 
           </div>
         )}
