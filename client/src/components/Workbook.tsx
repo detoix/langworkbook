@@ -1,6 +1,6 @@
 import Async from "react-async"
 import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom"
-import { getExercises, getMyExercises } from "../services/client"
+import { getExercises, getMyExercises, deleteExercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { Excercise } from "../models/excercise"
 
@@ -25,7 +25,7 @@ const Exercises = () => {
           <div>
             {exercises.map(exercise => 
               <p key={exercise.id}>
-                {exercise.id}. {exercise.tags.map(tag => <Link to={{search: buildQueryParams(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link>)} {exercise.data.content.map(phrase => phrase.text).join("_")} <Link to={"/exercises/" + exercise.id}>[take]</Link>
+                {exercise.id}. {exercise.tags.map(tag => <Link to={{search: buildQueryParams(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link>)} {exercise.data.content.map(phrase => phrase.text).join("_")} <Link to={"/exercises/" + exercise.id}>[take]</Link> <button onClick={_ => deleteExercise({ id: 0 }, { id: exercise.id })}>del</button>
               </p>
             )}
 

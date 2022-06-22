@@ -43,6 +43,12 @@ app.get("/exercises/:exerciseId", (req, res) => {
   })
 })
 
+app.delete("/exercises/:exerciseId", (req, res) => {
+  pool.deleteExercise(req.params.exerciseId, req.query.studentId).then(payload => {
+    res.send(payload)
+  })
+})
+
 app.post("/students/:studentId/exercises/:exerciseId", (req, res) => {
   let action = {
     student: req.params.studentId,
