@@ -78,6 +78,7 @@ const getExercises = () =>
 [
   {
     id: 0,
+    author: 0,
     tags:
     [
       "es",
@@ -91,6 +92,7 @@ const getExercises = () =>
   },
   {
     id: 1,
+    author: 0,
     tags:
     [
       "de",
@@ -105,6 +107,7 @@ const getExercises = () =>
   },
   {
     id: 2,
+    author: 0,
     tags:
     [
       "de",
@@ -117,6 +120,7 @@ const getExercises = () =>
   },
   {
     id: 3,
+    author: 1,
     tags:
     [
       "en",

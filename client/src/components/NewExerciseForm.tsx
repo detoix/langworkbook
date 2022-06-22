@@ -88,6 +88,7 @@ const handleSubmit = (event: any) => {
   event.preventDefault()
 
   let exercise: NewExercise = {
+    author: 0,
     tags: [],
     data: {
       content: [],

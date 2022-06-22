@@ -12,6 +12,7 @@ const createExercisesTable = client => new Promise((resolve, reject) => {
   client
     .query("CREATE TABLE IF NOT EXISTS exercises ( \
       id SERIAL PRIMARY KEY, \
+      author integer, \
       tags text[], \
       data jsonb \
       )")
@@ -19,7 +20,7 @@ const createExercisesTable = client => new Promise((resolve, reject) => {
     .catch(error => reject({client, error}))
 })
 
-const flattenExercises = exercises => exercises.flatMap(exercise => [exercise.id, exercise.tags, exercise.data])
+const flattenExercises = exercises => exercises.flatMap(exercise => [exercise.id, exercise.author, exercise.tags, exercise.data])
 
 const insertExercises = client => new Promise((resolve, reject) => {
   let exercises = getExercises()
@@ -28,8 +29,8 @@ const insertExercises = client => new Promise((resolve, reject) => {
 
   // console.log(flatMapOfExerciseData.reduce((previous, current, index) => (index % 4 == 0 ? "(" : "") + (previous != 0 ? previous : "$1") + ", $" + (index + 1) + (index % 4 == 3 ? ")" : "")))
 
-  let query = "INSERT INTO exercises(id, tags, data) VALUES " +
-    exercises.map((exercise, index) => `($${(index * 3) + 1}, $${(index * 3) + 2}, $${(index * 3) + 3})`).join() +
+  let query = "INSERT INTO exercises(id, author, tags, data) VALUES " +
+    exercises.map((exercise, index) => `($${(index * 4) + 1}, $${(index * 4) + 2}, $${(index * 4) + 3}, $${(index * 4) + 4})`).join() +
     " ON CONFLICT DO NOTHING"
 
   client
@@ -110,7 +111,7 @@ const createPool = () => {
     .then(data => data.rows)
 
   pool.createExercise = exercise => pool
-    .query("INSERT INTO exercises(tags, data) VALUES ($1, $2)", [exercise.tags, exercise.data])
+    .query("INSERT INTO exercises(author, tags, data) VALUES ($1, $2, $3)", [exercise.author, exercise.tags, exercise.data])
     .then(data => data)
 
   pool.getTags = () => pool

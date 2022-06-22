@@ -8,6 +8,7 @@ interface ExerciseData {
 }
 
 interface NewExercise {
+  author: any,
   tags: string[]
   data: ExerciseData
 }

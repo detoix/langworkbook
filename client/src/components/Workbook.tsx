@@ -1,23 +1,24 @@
 import Async from "react-async"
-import { Link, useSearchParams, useNavigate } from "react-router-dom"
-import { getExercises } from "../services/client"
+import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom"
+import { getExercises, getMyExercises } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { Excercise } from "../models/excercise"
 
 const defaultLimit = 10
 
 const Exercises = () => {
-
+  const { id } = useParams()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const query = {
     offset: Number(searchParams.get("offset")),
     limit: Number(searchParams.get("limit")) || defaultLimit,
-    tags: searchParams.get("tags")?.split(",") || []
+    tags: searchParams.get("tags")?.split(",") || [],
+    student: id
   }
 
   return (
-    <Async promiseFn={() => getExercises(query)}>
+    <Async promiseFn={props => id ? getMyExercises({id: props.id}) : getExercises(query)} id={id}> {/* explicit syntax because otherwise component won't reload */}
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
         {(exercises: Excercise[]) => (
