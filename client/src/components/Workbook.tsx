@@ -7,6 +7,7 @@ import { Excercise } from "../models/excercise"
 const defaultLimit = 10
 
 const Exercises = () => {
+  const studentId = 0
   const { id } = useParams()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -25,7 +26,8 @@ const Exercises = () => {
           <div>
             {exercises.map(exercise => 
               <p key={exercise.id}>
-                {exercise.id}. {exercise.tags.map(tag => <Link to={{search: buildQueryParams(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link>)} {exercise.data.content.map(phrase => phrase.text).join("_")} <Link to={"/exercises/" + exercise.id}>[take]</Link> <button onClick={_ => deleteExercise({ id: 0 }, { id: exercise.id })}>del</button>
+                {exercise.id}. {exercise.tags.map(tag => <Link to={{search: buildQueryParams(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link>)} {exercise.data.content.map(phrase => phrase.text).join("_")} <Link to={"/exercises/" + exercise.id}>[take]</Link> 
+                {studentId === exercise.author && <button onClick={_ => deleteExercise({ id: studentId }, { id: exercise.id })}>del</button> }
               </p>
             )}
 
