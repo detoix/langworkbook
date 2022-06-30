@@ -25,12 +25,8 @@ const flattenExercises = exercises => exercises.flatMap(exercise => [exercise.id
 const insertExercises = client => new Promise((resolve, reject) => {
   let exercises = getExercises()
   let flatMap = flattenExercises(exercises)
-  let ids = flatMap.reduce((previous, current, index) => (previous != 0 ? previous : "$1") + ", $" + (index + 1))
-
-  // console.log(flatMapOfExerciseData.reduce((previous, current, index) => (index % 4 == 0 ? "(" : "") + (previous != 0 ? previous : "$1") + ", $" + (index + 1) + (index % 4 == 3 ? ")" : "")))
-
   let query = "INSERT INTO exercises(id, author, tags, data) VALUES " +
-    exercises.map((exercise, index) => `($${(index * 4) + 1}, $${(index * 4) + 2}, $${(index * 4) + 3}, $${(index * 4) + 4})`).join() +
+    exercises.map((_, index) => `($${(index * 4) + 1}, $${(index * 4) + 2}, $${(index * 4) + 3}, $${(index * 4) + 4})`).join() +
     " ON CONFLICT DO NOTHING"
 
   client
@@ -65,7 +61,7 @@ const insertActions = client => new Promise((resolve, reject) => {
   let actions = getActions()
   let flatMap = flattenActions(actions)
   let query = "INSERT INTO actions(id, student, exercise, result) VALUES " +
-    actions.map((action, index) => `($${(index * 4) + 1}, $${(index * 4) + 2}, $${(index * 4) + 3}, $${(index * 4) + 4})`).join() +
+    actions.map((_, index) => `($${(index * 4) + 1}, $${(index * 4) + 2}, $${(index * 4) + 3}, $${(index * 4) + 4})`).join() +
     " ON CONFLICT DO NOTHING"
 
   client

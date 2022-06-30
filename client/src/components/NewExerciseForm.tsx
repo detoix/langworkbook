@@ -12,84 +12,12 @@ const defaultPhrases = [
   "er freut sich."
 ]
 
-const actions = [
-  (exercise: NewExercise, input: string) => exercise.tags = input.split(", "),
-
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      exercise.data.content.push({text: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      let last = exercise.data.content.pop()
-      exercise.data.answer.push(last!.text!)
-      exercise.data.content.push({letters: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {},
-
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      exercise.data.content.push({text: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      let last = exercise.data.content.pop()
-      exercise.data.answer.push(last!.text!)
-      exercise.data.content.push({letters: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {},
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      exercise.data.content.push({text: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      let last = exercise.data.content.pop()
-      exercise.data.answer.push(last!.text!)
-      exercise.data.content.push({letters: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {},
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      exercise.data.content.push({text: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      let last = exercise.data.content.pop()
-      exercise.data.answer.push(last!.text!)
-      exercise.data.content.push({letters: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {},
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      exercise.data.content.push({text: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {
-    if (input) {
-      let last = exercise.data.content.pop()
-      exercise.data.answer.push(last!.text!)
-      exercise.data.content.push({letters: input})
-    }
-  },
-  (exercise: NewExercise, input: string) => {},
-]
-
-//this is ridiculous, but the purpose is to avoid any sort of state
 const handleSubmit = (event: any) => {
   event.preventDefault()
 
   let exercise: NewExercise = {
     author: 0,
-    tags: [],
+    tags: event.target.tags.value.split(", "),
     data: {
       content: [],
       answer: []
@@ -97,8 +25,22 @@ const handleSubmit = (event: any) => {
   }
 
   for (let index = 0; index < event.target.length - 1; index++) {
-    if (actions[index]) {
-      actions[index](exercise, event.target[index].value)
+    let phrase = event.target["phrase" + index]
+    let letters = event.target["letters" + index]
+    let sth = null
+
+    if (phrase && phrase.value) {
+      exercise.data.content.push({text: phrase.value})
+    }
+
+    if (letters && letters.value) {
+      let last = exercise.data.content.pop()
+      exercise.data.answer.push(last!.text!)
+      exercise.data.content.push({letters: letters.value})
+    }
+
+    if (sth) {
+      //nothing yet
     }
   }
 
@@ -119,7 +61,7 @@ const NewExerciseForm = () => {
             <form onSubmit={event => handleSubmit(event)} style={{display: 'flex'}}>
               <div> 
                 <label>Tags:</label>
-                <input type="text" placeholder={tags.join(", ")} />
+                <input name="tags" type="text" placeholder={tags.join(", ")} />
               </div>
 
               <div>
@@ -128,9 +70,9 @@ const NewExerciseForm = () => {
 
               {Array.from({length: phrasesCount}, (_, i) => 
                 <div>
-                  <input type="text" placeholder={defaultPhrases[i]} />
-                  <input type="text" placeholder="letters" />
-                  <input type="text" placeholder="sth" />
+                  <input name={"phrase" + i} type="text" placeholder={defaultPhrases[i]} />
+                  <input name={"letters" + i} type="text" placeholder="letters" />
+                  <input name={"sth" + i} type="text" placeholder="sth" />
                 </div>
               )}
 

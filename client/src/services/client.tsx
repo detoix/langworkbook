@@ -38,7 +38,7 @@ const getExercise = async (props: IdCarrier) => {
 }
 
 const solveExcercise = async (student: IdCarrier, exercise: ExerciseSolution) => {
-  const res = await axios.post<any>(url + "/students/" + student.id + "/exercises" + exercise.id, exercise)
+  const res = await axios.post<any>(url + "/students/" + student.id + "/exercises/" + exercise.id, exercise)
   return res.data
 }
 
