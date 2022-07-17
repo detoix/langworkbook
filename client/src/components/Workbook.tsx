@@ -3,6 +3,7 @@ import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom"
 import { getExercises, getMyExercises, deleteExercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { Excercise } from "../models/excercise"
+import { Button, Card, CardActions, CardContent, Stack, TablePagination, Typography } from '@mui/material'
 
 const defaultLimit = 10
 
@@ -23,28 +24,36 @@ const Exercises = () => {
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
         {(exercises: Excercise[]) => (
-          <div>
+          <Stack spacing={1}>
             {exercises.map(exercise => 
-              <p key={exercise.id}>
-                {exercise.id}. {exercise.tags.map(tag => <Link to={{search: buildQueryParams(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link>)} {exercise.data.content.map(phrase => phrase.text).join("_")} <Link to={"/exercises/" + exercise.id}>[take]</Link> 
-                {studentId === exercise.author && <button onClick={_ => deleteExercise({ id: studentId }, { id: exercise.id })}>del</button> }
-              </p>
+              <Card variant="outlined">
+                <CardContent>
+                  <Typography color="text.secondary">
+                    <Stack direction="row" spacing={1}>
+                      <span>#{exercise.id}</span> {exercise.tags.map(tag => <Link to={{search: buildQueryParams(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link>)}
+                    </Stack>
+                  </Typography>
+                  <Typography>
+                    {exercise.data.content.map(phrase => phrase.text).join("_")}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" onClick={_ => navigate("/exercises/" + exercise.id)}>Take</Button>
+                  {studentId === exercise.author && <Button size="small" onClick={_ => deleteExercise({ id: studentId }, { id: exercise.id })}>Delete</Button>}
+                </CardActions>
+              </Card>
             )}
 
-            <Link to={{search: buildQueryParams(searchParams, {offset: Math.max(query.offset - query.limit, 0), limit: query.limit})}}>
-              <button>prev</button>
-            </Link>
-            <select defaultValue={query.limit} onChange={event => navigate({ search: buildQueryParams(searchParams, {offset: query.offset, limit: Number(event.target.value)}) }) }>
-              <option>1</option>
-              <option>{defaultLimit}</option>
-              <option>25</option>
-              <option>50</option>
-            </select>
-            <Link to={{search: buildQueryParams(searchParams, {offset: query.offset + query.limit, limit: query.limit})}}>
-              <button>next</button>
-            </Link>
-
-          </div>
+            <TablePagination
+              component="div"
+              rowsPerPageOptions={[1, defaultLimit, 25, 50]}
+              count={-1}
+              page={query.offset / query.limit}
+              onPageChange={(event, pageNumber) => navigate({ search: buildQueryParams(searchParams, {offset: pageNumber * query.limit, limit: query.limit}) })}
+              rowsPerPage={query.limit}
+              onRowsPerPageChange={event => navigate({ search: buildQueryParams(searchParams, {offset: query.offset, limit: Number(event.target.value)}) })}
+            />
+          </Stack>
         )}
       </Async.Fulfilled>
       <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>

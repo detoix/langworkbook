@@ -3,6 +3,7 @@ import { useSearchParams, Link } from "react-router-dom"
 import { getTags, createExercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { NewExercise } from "../models/excercise"
+import Button from "@mui/material/Button"
 
 const defaultPhrases = [
   "Florian ist seit",
@@ -77,7 +78,7 @@ const NewExerciseForm = () => {
               )}
 
               <Link to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>
-                <button>+</button>
+                <Button>+</Button>
               </Link>
 
               <input type="submit" value="Submit" />
