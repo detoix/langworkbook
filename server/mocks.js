@@ -86,7 +86,7 @@ const getExercises = () =>
       "preterito indefinido",
     ],
     data: {
-      content: [{text:"El otro dia me "}, {options: ["encontre, encontraba"]}, {text:" con Mariano cuando "}, {options: ["iba, fue"]}, {text:" a clase de Musica."}],
+      content: [{text:"El otro dia me "}, {options: ["encontre", "encontraba"]}, {text:" con Mariano cuando "}, {options: ["iba", "fue"]}, {text:" a clase de Musica."}],
       answer: ["encontre", "iba"]
     }
   },

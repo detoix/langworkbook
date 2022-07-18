@@ -3,6 +3,7 @@ import { useParams, useSearchParams, useNavigate, NavigateFunction, Link } from 
 import { Excercise, ExerciseSolution, IdCarrier } from "../models/excercise"
 import { getExercise, solveExcercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
+import { Autocomplete, Button, Stack, TextField, Typography } from "@mui/material"
 
 const handleSubmit = (student: IdCarrier, exercise: ExerciseSolution, navigate: NavigateFunction) => {
   solveExcercise(student, exercise).then(e => {
@@ -24,43 +25,56 @@ const Exercise = () => {
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
       {(exercise: Excercise) => (
-        <div>
+        <Stack spacing={1}>
           <form onSubmit={event => { 
             event.preventDefault()
 
             let answer: string[] = []
 
             for (let index = 0; index < event.currentTarget.elements.length - 1; index++) {
-              answer.push((event.currentTarget.elements[index] as HTMLInputElement).value)
+
+              let input = event.currentTarget.elements[index] as HTMLInputElement
+
+              if (input.value) {
+                answer.push(input.value)
+              }
             }
-            
+
             handleSubmit({ id: 0 }, { id: id, answer: answer }, navigate)
           }}>
+          <Stack direction="row" spacing={1}>
+
             {Array.from({length: 1}, (_, i) => { 
               let answerCopy = [...(answer || [])]
               let correctAnswerCopy = [...(correctAnswer || [])]
 
               return exercise.data.content.map((phrase, index) => {
                 if (phrase.text) {
-                  return phrase.text
+                  return <Typography>{phrase.text}</Typography>
                 } else if (answer && correctAnswer) {
                   let phraseAnswer = answerCopy.shift()
                   let phraseCorrectAnswer = correctAnswerCopy.shift()
 
                   if (phraseAnswer === phraseCorrectAnswer) {
-                    return <span><b>{phraseCorrectAnswer}</b></span>
+                    return <Typography><b>{phraseCorrectAnswer}</b></Typography>
                   } else {
-                    return <span> <del>{phraseAnswer}</del> {phraseCorrectAnswer} </span>
+                    return <Typography><del>{phraseAnswer}</del> {phraseCorrectAnswer}</Typography>
                   }
+                } else if (phrase.options) {
+                  return <Autocomplete disablePortal options={phrase.options} renderInput={(params) => <TextField {...params} />} />
+                } else if (phrase.letters) {
+                  return <TextField label={phrase.letters} />
                 } else {
-                  return <div><input type="text" /><label>{JSON.stringify(phrase.options ?? phrase.letters)}</label></div>
+                  return null
                 }
               })
             })}
-            {!answer && !correctAnswer && <input type="submit" value="Submit" />}
-            {next && <Link to={"/exercises/" + next}><button>next</button></Link>}
+            {!answer && !correctAnswer && <Button type="submit">Submit</Button>}
+            {next && <Button component={Link} to={"/exercises/" + next}>Next</Button>}
+
+            </Stack>
           </form>
-        </div>
+        </Stack>
       )}
       </Async.Fulfilled>
       <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>

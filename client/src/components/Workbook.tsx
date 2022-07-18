@@ -3,7 +3,7 @@ import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom"
 import { getExercises, getMyExercises, deleteExercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { Excercise } from "../models/excercise"
-import { Button, Card, CardActions, CardContent, Stack, TablePagination, Typography } from '@mui/material'
+import { Button, Card, CardActions, CardContent, Stack, TablePagination, Typography } from "@mui/material"
 
 const defaultLimit = 10
 
