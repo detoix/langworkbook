@@ -3,7 +3,7 @@ import { useSearchParams, Link } from "react-router-dom"
 import { getTags, createExercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { NewExercise } from "../models/excercise"
-import Button from "@mui/material/Button"
+import { Autocomplete, Button, Card, CardActions, CardContent, Stack, TextField } from "@mui/material"
 
 const defaultPhrases = [
   "Florian ist seit",
@@ -18,11 +18,15 @@ const handleSubmit = (event: any) => {
 
   let exercise: NewExercise = {
     author: 0,
-    tags: event.target.tags.value.split(", "),
+    tags: [],
     data: {
       content: [],
       answer: []
     }
+  }
+
+  for (let index = 0; index < event.target.tags.parentNode.children.length - 3; index++) {
+    exercise.tags.push(event.target.tags.parentNode.children[index].textContent)
   }
 
   for (let index = 0; index < event.target.length - 1; index++) {
@@ -58,32 +62,36 @@ const NewExerciseForm = () => {
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
         {(tags: string[]) => (
-          <div>
-            <form onSubmit={event => handleSubmit(event)} style={{display: 'flex'}}>
-              <div> 
-                <label>Tags:</label>
-                <input name="tags" type="text" placeholder={tags.join(", ")} />
-              </div>
+          <form onSubmit={event => handleSubmit(event)} style={{display: 'flex'}}>
+            <Card variant="outlined">
+              <CardContent>
+                <Autocomplete
+                  multiple
+                  freeSolo
+                  options={tags}
+                  renderInput={(params) => <TextField name="tags" {...params} label="Tags" placeholder={tags.join(", ")} />}
+                />
+                <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
 
-              <div>
-                <label>Exercise:</label>
-              </div>
+                  {Array.from({length: phrasesCount}, (_, i) => 
+                    <Stack key={i}>
+                      <TextField name={"phrase" + i} variant="standard" placeholder={defaultPhrases[i]} />
+                      {/* <input name={"phrase" + i} type="text" placeholder={defaultPhrases[i]} /> */}
+                      {/* <input name={"letters" + i} type="text" placeholder="letters" />
+                      <input name={"sth" + i} type="text" placeholder="sth" /> */}
+                    </Stack>
+                  )}
 
-              {Array.from({length: phrasesCount}, (_, i) => 
-                <div>
-                  <input name={"phrase" + i} type="text" placeholder={defaultPhrases[i]} />
-                  <input name={"letters" + i} type="text" placeholder="letters" />
-                  <input name={"sth" + i} type="text" placeholder="sth" />
-                </div>
-              )}
-
-              <Link to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>
-                <Button>+</Button>
-              </Link>
-
-              <input type="submit" value="Submit" />
-            </form>
-          </div>
+                  <Link to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>
+                    <Button>+</Button>
+                  </Link>
+                </Stack>
+              </CardContent>
+              <CardActions>
+                <Button type="submit">Submit</Button>
+              </CardActions>
+            </Card>
+          </form>
         )}
       </Async.Fulfilled>
       <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>

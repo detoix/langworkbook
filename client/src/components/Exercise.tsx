@@ -41,49 +41,47 @@ const Exercise = () => {
 
             handleSubmit({ id: 0 }, { id: id, answer: answer }, navigate)
           }}>
-        <Card key={exercise.id} variant="outlined">
-          <CardContent>
-          <Stack direction="row" spacing={1} style={{ alignItems: "baseline" }}>
+          <Card key={exercise.id} variant="outlined">
+            <CardContent>
+              <Stack direction="row" spacing={1} style={{ alignItems: "baseline" }}>
 
-            {Array.from({length: 1}, (_, i) => { 
-              let answerCopy = [...(answer || [])]
-              let correctAnswerCopy = [...(correctAnswer || [])]
+                {Array.from({length: 1}, (_, i) => { 
+                  let answerCopy = [...(answer || [])]
+                  let correctAnswerCopy = [...(correctAnswer || [])]
 
-              return exercise.data.content.map((phrase, index) => {
-                if (phrase.text) {
-                  return <Typography key={index}>{phrase.text}</Typography>
-                } else if (answer && correctAnswer) {
-                  let phraseAnswer = answerCopy.shift()
-                  let phraseCorrectAnswer = correctAnswerCopy.shift()
-                  let correct = phraseAnswer === phraseCorrectAnswer
+                  return exercise.data.content.map((phrase, index) => {
+                    if (phrase.text) {
+                      return <Typography key={index}>{phrase.text}</Typography>
+                    } else if (answer && correctAnswer) {
+                      let phraseAnswer = answerCopy.shift()
+                      let phraseCorrectAnswer = correctAnswerCopy.shift()
+                      let correct = phraseAnswer === phraseCorrectAnswer
 
-                  return (
-                    <FormControl focused>
-                      <InputLabel variant="standard" color="success" error={!correct}>Your answer</InputLabel>
-                      <Input 
-                        defaultValue={phraseCorrectAnswer} 
-                        error={!correct} 
-                        readOnly={true}
-                        color="success"
-                        startAdornment={correct ? null : <Typography color="error"><del>{phraseAnswer}-</del></Typography>} 
-                      />
-                    </FormControl>
-                  )
-                } else {
-                  return <TextField key={index} required={true} variant="standard" label={phrase.letters ?? (phrase.options ?? []).join(" / ")} />
-                }
-              })
-            })}
-            </Stack>
-          </CardContent>
-          <CardActions>
-
-            {!answer && !correctAnswer && <Button type="submit">Submit</Button>}
-            {next && <Button component={Link} to={"/exercises/" + next}>Next</Button>}
-          </CardActions>
-
-        </Card>
-          </form>
+                      return (
+                        <FormControl focused>
+                          <InputLabel variant="standard" color="success" error={!correct}>Your answer</InputLabel>
+                          <Input 
+                            defaultValue={phraseCorrectAnswer} 
+                            error={!correct} 
+                            readOnly={true}
+                            color="success"
+                            startAdornment={correct ? null : <Typography color="error"><del>{phraseAnswer}-</del></Typography>} 
+                          />
+                        </FormControl>
+                      )
+                    } else {
+                      return <TextField key={index} required={true} variant="standard" label={phrase.letters ?? (phrase.options ?? []).join(" / ")} />
+                    }
+                  })
+                })}
+              </Stack>
+            </CardContent>
+            <CardActions>
+              {!answer && !correctAnswer && <Button type="submit">Submit</Button>}
+              {next && <Button component={Link} to={"/exercises/" + next}>Next</Button>}
+            </CardActions>
+          </Card>
+        </form>
       )}
       </Async.Fulfilled>
       <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
