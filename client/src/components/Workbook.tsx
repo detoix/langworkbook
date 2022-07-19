@@ -26,13 +26,12 @@ const Exercises = () => {
         {(exercises: Excercise[]) => (
           <Stack spacing={1}>
             {exercises.map(exercise => 
-              <Card variant="outlined">
+              <Card key={exercise.id} variant="outlined">
                 <CardContent>
-                  <Typography color="text.secondary">
                     <Stack direction="row" spacing={1}>
-                      <span>#{exercise.id}</span> {exercise.tags.map(tag => <Link to={{search: buildQueryParams(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link>)}
+                      <Typography color="text.secondary">#{exercise.id}</Typography>
+                      {exercise.tags.map((tag, index) => <Typography key={index} color="text.secondary"><Link to={{search: buildQueryParams(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link></Typography> )}
                     </Stack>
-                  </Typography>
                   <Typography>
                     {exercise.data.content.map(phrase => phrase.text).join("_")}
                   </Typography>

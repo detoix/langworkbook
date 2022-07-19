@@ -3,7 +3,7 @@ import { useParams, useSearchParams, useNavigate, NavigateFunction, Link } from 
 import { Excercise, ExerciseSolution, IdCarrier } from "../models/excercise"
 import { getExercise, solveExcercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
-import { Autocomplete, Button, Stack, TextField, Typography } from "@mui/material"
+import { Button, Card, CardActions, CardContent, FormControl, InputLabel, Input, Stack, TextField, Typography } from "@mui/material"
 
 const handleSubmit = (student: IdCarrier, exercise: ExerciseSolution, navigate: NavigateFunction) => {
   solveExcercise(student, exercise).then(e => {
@@ -25,7 +25,6 @@ const Exercise = () => {
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
       {(exercise: Excercise) => (
-        <Stack spacing={1}>
           <form onSubmit={event => { 
             event.preventDefault()
 
@@ -42,7 +41,9 @@ const Exercise = () => {
 
             handleSubmit({ id: 0 }, { id: id, answer: answer }, navigate)
           }}>
-          <Stack direction="row" spacing={1}>
+        <Card key={exercise.id} variant="outlined">
+          <CardContent>
+          <Stack direction="row" spacing={1} style={{ alignItems: "baseline" }}>
 
             {Array.from({length: 1}, (_, i) => { 
               let answerCopy = [...(answer || [])]
@@ -50,31 +51,39 @@ const Exercise = () => {
 
               return exercise.data.content.map((phrase, index) => {
                 if (phrase.text) {
-                  return <Typography>{phrase.text}</Typography>
+                  return <Typography key={index}>{phrase.text}</Typography>
                 } else if (answer && correctAnswer) {
                   let phraseAnswer = answerCopy.shift()
                   let phraseCorrectAnswer = correctAnswerCopy.shift()
+                  let correct = phraseAnswer === phraseCorrectAnswer
 
-                  if (phraseAnswer === phraseCorrectAnswer) {
-                    return <Typography><b>{phraseCorrectAnswer}</b></Typography>
-                  } else {
-                    return <Typography><del>{phraseAnswer}</del> {phraseCorrectAnswer}</Typography>
-                  }
-                } else if (phrase.options) {
-                  return <Autocomplete disablePortal options={phrase.options} renderInput={(params) => <TextField {...params} />} />
-                } else if (phrase.letters) {
-                  return <TextField label={phrase.letters} />
+                  return (
+                    <FormControl focused>
+                      <InputLabel variant="standard" color="success" error={!correct}>Your answer</InputLabel>
+                      <Input 
+                        defaultValue={phraseCorrectAnswer} 
+                        error={!correct} 
+                        readOnly={true}
+                        color="success"
+                        startAdornment={correct ? null : <Typography color="error"><del>{phraseAnswer}-</del></Typography>} 
+                      />
+                    </FormControl>
+                  )
                 } else {
-                  return null
+                  return <TextField key={index} required={true} variant="standard" label={phrase.letters ?? (phrase.options ?? []).join(" / ")} />
                 }
               })
             })}
+            </Stack>
+          </CardContent>
+          <CardActions>
+
             {!answer && !correctAnswer && <Button type="submit">Submit</Button>}
             {next && <Button component={Link} to={"/exercises/" + next}>Next</Button>}
+          </CardActions>
 
-            </Stack>
+        </Card>
           </form>
-        </Stack>
       )}
       </Async.Fulfilled>
       <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
