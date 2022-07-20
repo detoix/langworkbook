@@ -70,7 +70,7 @@ const Exercise = () => {
                         </FormControl>
                       )
                     } else {
-                      return <TextField key={index} required={true} variant="standard" label={phrase.letters ?? (phrase.options ?? []).join(" / ")} />
+                      return <TextField key={index} required={true} variant="standard" label={phrase.hint} />
                     }
                   })
                 })}

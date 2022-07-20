@@ -86,7 +86,7 @@ const getExercises = () =>
       "preterito indefinido",
     ],
     data: {
-      content: [{text:"El otro dia me "}, {options: ["encontre", "encontraba"]}, {text:" con Mariano cuando "}, {options: ["iba", "fue"]}, {text:" a clase de Musica."}],
+      content: [{text:"El otro dia me "}, {hint: "encontre / encontraba"}, {text:" con Mariano cuando "}, {hint: "iba / fue"}, {text:" a clase de Musica."}],
       answer: ["encontre", "iba"]
     }
   },
@@ -101,7 +101,7 @@ const getExercises = () =>
       "mixed letters"
     ],
     data: {
-      content: [{text:"Florian is seit drei Monaten wieder "}, {letters: "INGSLE"}],
+      content: [{text:"Florian is seit drei Monaten wieder "}, {hint: "INGSLE"}],
       answer: ["Single"]
     }
   },
@@ -127,7 +127,7 @@ const getExercises = () =>
       "a1",
     ],
     data: {
-      content: [{text:"I have a"}, {letters: "dre"}, {text:"car."}],
+      content: [{text:"I have a"}, {hint: "dre"}, {text:"car."}],
       answer: ["red"]
     }
   }

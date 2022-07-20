@@ -29,21 +29,16 @@ const handleSubmit = (event: any) => {
 
   for (let index = 0; index < event.target.length - 1; index++) {
     let phrase = event.target["phrase" + index]
-    let letters = event.target["letters" + index]
-    let sth = null
+    let hint = event.target["hint" + index]
 
     if (phrase && phrase.value) {
       exercise.data.content.push({text: phrase.value})
     }
 
-    if (letters && letters.value) {
+    if (hint && hint.value) {
       let last = exercise.data.content.pop()
       exercise.data.answer.push(last!.text!)
-      exercise.data.content.push({letters: letters.value})
-    }
-
-    if (sth) {
-      //nothing yet
+      exercise.data.content.push({hint: hint.value})
     }
   }
 
@@ -64,26 +59,22 @@ const NewExerciseForm = () => {
             <Card variant="outlined">
               <CardContent>
                 <Stack spacing={2}>
-
-                <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
-
-                  {Array.from({length: phrasesCount}, (_, i) => 
-                    <Stack key={i}>
-                      <TextField name={"phrase" + i} variant="standard" placeholder={defaultPhrases[i].phrase} />
-                      <TextField name={"letters" + i} variant="standard" placeholder={defaultPhrases[i].hint} />
-                    </Stack>
-                  )}
-
-                  <Button component={Link} to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>+</Button>
-
-                </Stack>
-                <Autocomplete
-                  multiple
-                  freeSolo
-                  options={tags}
-                  renderInput={(params) => <TextField name="tags" {...params} label="Tags" placeholder={tags.join(", ")} />}
-                  />
+                  <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
+                    {Array.from({length: phrasesCount}, (_, i) => 
+                      <Stack key={i}>
+                        <TextField name={"phrase" + i} variant="standard" placeholder={defaultPhrases[i]?.phrase} />
+                        <TextField name={"hint" + i} variant="standard" placeholder={defaultPhrases[i]?.hint} />
+                      </Stack>
+                    )}
+                    <Button component={Link} to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>+</Button>
                   </Stack>
+                  <Autocomplete
+                    multiple
+                    freeSolo
+                    options={tags}
+                    renderInput={(params) => <TextField name="tags" {...params} label="Tags" placeholder={tags.join(", ")} />}
+                  />
+                </Stack>
               </CardContent>
               <CardActions>
                 <Button type="submit">Submit</Button>

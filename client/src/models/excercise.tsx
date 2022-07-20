@@ -23,8 +23,7 @@ interface ExerciseSolution extends IdCarrier {
 
 interface Phrase {
   text?: string
-  options?: string[]
-  letters?: string
+  hint?: string
 }
 
 export type {
