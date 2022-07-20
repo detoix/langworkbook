@@ -21,7 +21,7 @@ const Exercises = () => {
 
   return (
     <Async promiseFn={props => id ? getMyExercises({id: props.id}) : getExercises(query)} id={id}> {/* explicit syntax because otherwise component won't reload */}
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending></Async.Pending>
       <Async.Fulfilled>
         {(exercises: Excercise[]) => (
           <Stack spacing={1}>

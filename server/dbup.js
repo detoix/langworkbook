@@ -77,7 +77,7 @@ const fixPrimaryKeySequence = (client, table) => new Promise((resolve, reject) =
     .catch(error => reject({client, error}))
 })
 
-new Pool({ connectionString: "postgres://xd:xd@localhost:5432/tmp" })
+new Pool({ connectionString: process.argv[2] })
   .connect()
   .then(client => dropExercisesTable(client))
   .then(client => createExercisesTable(client))

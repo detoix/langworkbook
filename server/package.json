@@ -5,7 +5,7 @@
   "author": "First Last <first.last@example.com>",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon index.js & node dbup.js",
+    "start": "nodemon index.js postgres://xd:xd@localhost:5432/tmp & node dbup.js postgres://xd:xd@localhost:5432/tmp",
     "test": "jest"
   },
   "dependencies": {

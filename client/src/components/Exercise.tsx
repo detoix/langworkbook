@@ -22,7 +22,7 @@ const Exercise = () => {
 
   return (
     <Async promiseFn={props => getExercise({id: props.id})} id={id}>
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending></Async.Pending>
       <Async.Fulfilled>
       {(exercise: Excercise) => (
           <form onSubmit={event => { 

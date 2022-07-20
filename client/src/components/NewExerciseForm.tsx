@@ -56,7 +56,7 @@ const NewExerciseForm = () => {
 
   return (
     <Async promiseFn={getTags}>
-      <Async.Pending>Loading...</Async.Pending>
+      <Async.Pending></Async.Pending>
       <Async.Fulfilled>
         {(tags: string[]) => (
           <form onSubmit={event => handleSubmit(event, navigate)} style={{display: 'flex'}}>

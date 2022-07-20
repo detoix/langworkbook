@@ -1,7 +1,7 @@
 const { Pool } = require("pg")
 
-const createPool = () => {
-  let pool = new Pool({ connectionString: "postgres://xd:xd@localhost:5432/tmp" })
+const createPool = (connectionString) => {
+  let pool = new Pool({ connectionString: connectionString })
 
   pool.getExercises = (limit, offset, tags) => pool
     .query("SELECT * FROM exercises \

@@ -5,7 +5,7 @@ const { projectionOf } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
 const app = express()
-const pool = createPool()
+const pool = createPool(process.argv[2])
 const port = process.env.PORT || 8080
 
 app.use(cors())
