@@ -1,5 +1,5 @@
 import Async from "react-async"
-import { useSearchParams, Link } from "react-router-dom"
+import { useNavigate, useSearchParams, Link, NavigateFunction } from "react-router-dom"
 import { getTags, createExercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { NewExercise } from "../models/excercise"
@@ -11,7 +11,7 @@ const defaultPhrases = [
   { phrase: "Monaten wieder Single.", hint: "" }
 ]
 
-const handleSubmit = (event: any) => {
+const handleSubmit = (event: any, navigate: NavigateFunction) => {
   event.preventDefault()
 
   let exercise: NewExercise = {
@@ -42,44 +42,56 @@ const handleSubmit = (event: any) => {
     }
   }
 
-  createExercise(exercise).then(response => console.log(response))
+  createExercise(exercise).then(response => {
+    let query = buildQueryParams(new URLSearchParams(), { createdId: response.id })
+    navigate({search: query})
+  })
 }
 
 const NewExerciseForm = () => {
-
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const phrasesCount = Number(searchParams.get("phrases")) || 3
+  const createdId = searchParams.get("createdId")
 
   return (
     <Async promiseFn={getTags}>
       <Async.Pending>Loading...</Async.Pending>
       <Async.Fulfilled>
         {(tags: string[]) => (
-          <form onSubmit={event => handleSubmit(event)} style={{display: 'flex'}}>
-            <Card variant="outlined">
-              <CardContent>
-                <Stack spacing={2}>
-                  <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
-                    {Array.from({length: phrasesCount}, (_, i) => 
-                      <Stack key={i}>
-                        <TextField name={"phrase" + i} variant="standard" placeholder={defaultPhrases[i]?.phrase} />
-                        <TextField name={"hint" + i} variant="standard" placeholder={defaultPhrases[i]?.hint} />
-                      </Stack>
-                    )}
-                    <Button component={Link} to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>+</Button>
+          <form onSubmit={event => handleSubmit(event, navigate)} style={{display: 'flex'}}>
+            <Stack spacing={1}>
+              {createdId && <Card variant="outlined">
+                <CardActions>
+                  <Button color="success" variant="contained" component={Link} to={"/exercises/" + createdId}>Take</Button>
+                  <Button color="success" variant="outlined" component={Link} to="/exercises/new/clear">Create another</Button>
+                </CardActions>
+              </Card>}
+              <Card variant="outlined">
+                <CardContent>
+                  <Stack spacing={2}>
+                    <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
+                      {Array.from({length: phrasesCount}, (_, i) => 
+                        <Stack key={i}>
+                          <TextField name={"phrase" + i} variant="standard" placeholder={defaultPhrases[i]?.phrase} />
+                          <TextField name={"hint" + i} variant="standard" placeholder={defaultPhrases[i]?.hint} />
+                        </Stack>
+                      )}
+                      <Button component={Link} to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>+</Button>
+                    </Stack>
+                    <Autocomplete
+                      multiple
+                      freeSolo
+                      options={tags}
+                      renderInput={(params) => <TextField name="tags" {...params} label="Tags" placeholder={tags.join(", ")} />}
+                      />
                   </Stack>
-                  <Autocomplete
-                    multiple
-                    freeSolo
-                    options={tags}
-                    renderInput={(params) => <TextField name="tags" {...params} label="Tags" placeholder={tags.join(", ")} />}
-                  />
-                </Stack>
-              </CardContent>
-              <CardActions>
-                <Button type="submit">Submit</Button>
-              </CardActions>
-            </Card>
+                </CardContent>
+                <CardActions>
+                  <Button type="submit">Submit</Button>
+                </CardActions>
+              </Card>
+            </Stack>
           </form>
         )}
       </Async.Fulfilled>

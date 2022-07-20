@@ -11,8 +11,8 @@ const createPool = () => {
     .then(data => data.rows)
 
   pool.createExercise = exercise => pool
-    .query("INSERT INTO exercises(author, tags, data) VALUES ($1, $2, $3)", [exercise.author, exercise.tags, exercise.data])
-    .then(data => data)
+    .query("INSERT INTO exercises(author, tags, data) VALUES ($1, $2, $3) RETURNING id", [exercise.author, exercise.tags, exercise.data])
+    .then(data => data.rows[0])
 
   pool.getTags = () => pool
     .query("SELECT DISTINCT UNNEST(tags) FROM exercises")
