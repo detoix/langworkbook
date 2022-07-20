@@ -6,11 +6,9 @@ import { NewExercise } from "../models/excercise"
 import { Autocomplete, Button, Card, CardActions, CardContent, Stack, TextField } from "@mui/material"
 
 const defaultPhrases = [
-  "Florian ist seit",
-  "drei",
-  "Monaten wieder Single,",
-  "aber",
-  "er freut sich."
+  { phrase: "Florian ist seit", hint: "" },
+  { phrase: "drei", hint: "reid" },
+  { phrase: "Monaten wieder Single.", hint: "" }
 ]
 
 const handleSubmit = (event: any) => {
@@ -55,7 +53,7 @@ const handleSubmit = (event: any) => {
 const NewExerciseForm = () => {
 
   const [searchParams] = useSearchParams()
-  const phrasesCount = Number(searchParams.get("phrases")) || 1
+  const phrasesCount = Number(searchParams.get("phrases")) || 3
 
   return (
     <Async promiseFn={getTags}>
@@ -65,27 +63,27 @@ const NewExerciseForm = () => {
           <form onSubmit={event => handleSubmit(event)} style={{display: 'flex'}}>
             <Card variant="outlined">
               <CardContent>
+                <Stack spacing={2}>
+
+                <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
+
+                  {Array.from({length: phrasesCount}, (_, i) => 
+                    <Stack key={i}>
+                      <TextField name={"phrase" + i} variant="standard" placeholder={defaultPhrases[i].phrase} />
+                      <TextField name={"letters" + i} variant="standard" placeholder={defaultPhrases[i].hint} />
+                    </Stack>
+                  )}
+
+                  <Button component={Link} to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>+</Button>
+
+                </Stack>
                 <Autocomplete
                   multiple
                   freeSolo
                   options={tags}
                   renderInput={(params) => <TextField name="tags" {...params} label="Tags" placeholder={tags.join(", ")} />}
-                />
-                <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
-
-                  {Array.from({length: phrasesCount}, (_, i) => 
-                    <Stack key={i}>
-                      <TextField name={"phrase" + i} variant="standard" placeholder={defaultPhrases[i]} />
-                      {/* <input name={"phrase" + i} type="text" placeholder={defaultPhrases[i]} /> */}
-                      {/* <input name={"letters" + i} type="text" placeholder="letters" />
-                      <input name={"sth" + i} type="text" placeholder="sth" /> */}
-                    </Stack>
-                  )}
-
-                  <Link to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>
-                    <Button>+</Button>
-                  </Link>
-                </Stack>
+                  />
+                  </Stack>
               </CardContent>
               <CardActions>
                 <Button type="submit">Submit</Button>

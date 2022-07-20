@@ -58,7 +58,7 @@ const Exercise = () => {
                       let correct = phraseAnswer === phraseCorrectAnswer
 
                       return (
-                        <FormControl focused>
+                        <FormControl key={index} focused>
                           <InputLabel variant="standard" color="success" error={!correct}>Your answer</InputLabel>
                           <Input 
                             defaultValue={phraseCorrectAnswer} 
