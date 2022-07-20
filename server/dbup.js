@@ -1,6 +1,8 @@
 const { Pool } = require("pg")
 const { getExercises, getActions } = require("./mocks")
 
+const clean = process.argv[3]
+
 const dropExercisesTable = client => new Promise((resolve, reject) => {
   client
     .query("DROP TABLE IF EXISTS exercises")
@@ -77,16 +79,18 @@ const fixPrimaryKeySequence = (client, table) => new Promise((resolve, reject) =
     .catch(error => reject({client, error}))
 })
 
+const emptyPromise = client => new Promise((resolve, _) => resolve(client))
+
 new Pool({ connectionString: process.argv[2] })
   .connect()
-  .then(client => dropExercisesTable(client))
+  .then(client => clean ? dropExercisesTable(client) : emptyPromise(client))
   .then(client => createExercisesTable(client))
-  .then(client => insertExercises(client))
-  .then(client => fixPrimaryKeySequence(client, "exercises"))
-  .then(client => dropActionsTable(client))
+  .then(client => clean ? insertExercises(client) : emptyPromise(client))
+  .then(client => clean ? fixPrimaryKeySequence(client, "exercises") : emptyPromise(client))
+  .then(client => clean ? dropActionsTable(client) : emptyPromise(client))
   .then(client => createActionsTable(client))
-  .then(client => insertActions(client))
-  .then(client => fixPrimaryKeySequence(client, "actions"))
+  .then(client => clean ? insertActions(client) : emptyPromise(client))
+  .then(client => clean ? fixPrimaryKeySequence(client, "actions") : emptyPromise(client))
   .then(client => {
     console.log("Database ready!")
     client.release()
