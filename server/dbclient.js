@@ -33,7 +33,7 @@ const createPool = () => {
 
   pool.deleteExercise = (exerciseId, studentId) => pool
     .query("DELETE FROM exercises \
-      WHERE id = $1 AND author = $2", [exerciseId, studentId])
+      WHERE id = $1 AND author = $2 AND $1 NOT IN (SELECT exercise FROM actions)", [exerciseId, studentId])
 
   pool.updateExercise = id => pool
     .query("UPDATE exercises SET tags = $1, data = $2 \
