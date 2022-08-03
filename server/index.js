@@ -4,8 +4,9 @@ const bodyParser = require("body-parser")
 const { projectionOf } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
+const connectionString = process.argv[2] || process.env.DATABASE_URL
 const app = express()
-const pool = createPool(process.argv[2])
+const pool = createPool(connectionString)
 const port = process.env.PORT || 8080
 
 app.use(cors())
@@ -80,5 +81,5 @@ app.post("/exercises", (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Listening on port ${port}, connected with ${connectionString}`)
 })

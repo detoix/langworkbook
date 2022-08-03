@@ -81,7 +81,7 @@ const fixPrimaryKeySequence = (client, table) => new Promise((resolve, reject) =
 
 const emptyPromise = client => new Promise((resolve, _) => resolve(client))
 
-new Pool({ connectionString: process.argv[2] })
+new Pool({ connectionString: process.argv[2] || process.env.DATABASE_URL })
   .connect()
   .then(client => clean ? dropExercisesTable(client) : emptyPromise(client))
   .then(client => createExercisesTable(client))
