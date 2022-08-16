@@ -16,15 +16,14 @@ const handleSubmit = (event: any, navigate: NavigateFunction) => {
 
   let exercise: NewExercise = {
     author: 0,
-    tags: [],
+    tags: event.target.tags.value
+      .split(",")
+      .map((tag: string) => tag.trim())
+      .filter((tag: string) => tag),
     data: {
       content: [],
       answer: []
     }
-  }
-
-  for (let index = 0; index < event.target.tags.parentNode.children.length - 3; index++) {
-    exercise.tags.push(event.target.tags.parentNode.children[index].textContent)
   }
 
   for (let index = 0; index < event.target.length - 1; index++) {
