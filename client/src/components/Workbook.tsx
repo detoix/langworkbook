@@ -33,7 +33,7 @@ const Exercises = () => {
                       {exercise.tags.map((tag, index) => <Typography key={index} color="text.secondary"><Link to={{search: buildQueryParams(searchParams, { tags: [...query.tags].concat(tag) })}}>#{tag}</Link></Typography> )}
                     </Stack>
                   <Typography>
-                    {exercise.data.content.map(phrase => phrase.text).join("_")}
+                    {exercise.data.content.map(phrase => phrase.text ?? "___").join(" ")}
                   </Typography>
                 </CardContent>
                 <CardActions>
