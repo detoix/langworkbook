@@ -37,7 +37,7 @@ const Exercises = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" component={Link} to={"/exercises/" + exercise.id}>Take</Button>
+                  <Button size="small" component={Link} to={"/workbook/exercises/" + exercise.id}>Take</Button>
                   {studentId === exercise.author && <Button size="small" onClick={_ => {
                     deleteExercise({ id: studentId }, { id: exercise.id })
                     navigate("#")

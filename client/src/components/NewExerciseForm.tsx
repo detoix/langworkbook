@@ -63,8 +63,8 @@ const NewExerciseForm = () => {
             <Stack spacing={1}>
               {createdId && <Card variant="outlined">
                 <CardActions>
-                  <Button color="success" variant="contained" component={Link} to={"/exercises/" + createdId}>Take</Button>
-                  <Button color="success" variant="outlined" component={Link} to="/exercises/new/clear">Create another</Button>
+                  <Button color="success" variant="contained" component={Link} to={"/workbook/exercises/" + createdId}>Take</Button>
+                  <Button color="success" variant="outlined" component={Link} to="/workbook/exercises/new/clear">Create another</Button>
                 </CardActions>
               </Card>}
               <Card variant="outlined">

@@ -78,7 +78,7 @@ const Exercise = () => {
             </CardContent>
             <CardActions>
               {!answer && !correctAnswer && <Button type="submit">Submit</Button>}
-              {next && <Button component={Link} to={"/exercises/" + next}>Next</Button>}
+              {next && <Button component={Link} to={"/workbook/exercises/" + next}>Next</Button>}
             </CardActions>
           </Card>
         </form>

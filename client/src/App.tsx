@@ -10,18 +10,18 @@ const App = () => {
       <Stack spacing={1}>
         <AppBar position="sticky">
           <Toolbar>
-            <Button color="inherit" component={Link} to={"/"}>HOME</Button>
-            <Button color="inherit" component={Link} to={"/exercises/new"}>ADD EXERCISE</Button>
-            <Button color="inherit" component={Link} to={"/students/0"}> MY ACCOUNT</Button>
+            <Button color="inherit" component={Link} to={"/workbook/"}>HOME</Button>
+            <Button color="inherit" component={Link} to={"/workbook/exercises/new"}>ADD EXERCISE</Button>
+            <Button color="inherit" component={Link} to={"/workbook/students/0"}> MY ACCOUNT</Button>
           </Toolbar>
         </AppBar>
         <Routes>
           <Route path="/" element={<Navigate to="/workbook" />} />
           <Route path="/workbook" element={<Workbook />} />
-          <Route path="/exercises/new" element={<NewExerciseForm />} />
-          <Route path="/exercises/new/clear" element={<Navigate to="/exercises/new" />} />
-          <Route path="/exercises/:id" element={<Excercise />} />
-          <Route path="/students/:id" element={<Workbook />} />
+          <Route path="/workbook/exercises/new" element={<NewExerciseForm />} />
+          <Route path="/workbook/exercises/new/clear" element={<Navigate to="/workbook/exercises/new" />} />
+          <Route path="/workbook/exercises/:id" element={<Excercise />} />
+          <Route path="/workbook/students/:id" element={<Workbook />} />
         </Routes>
       </Stack>
     </BrowserRouter>
