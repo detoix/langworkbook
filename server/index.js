@@ -1,6 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
+const path = require("path")
 const { projectionOf } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
@@ -11,6 +12,7 @@ const port = process.env.PORT || 8080
 
 app.use(cors())
 app.use(bodyParser.json())
+app.use(express.static(path.resolve(__dirname, "../client/build")));
 
 app.get("/exercises", (req, res) => {
   let tags = req.query.tags && req.query.tags.split(",").length

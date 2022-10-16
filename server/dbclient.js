@@ -19,9 +19,10 @@ const createPool = (connectionString) => {
     .then(data => data.rows.map(row => row.unnest))
 
   pool.getMyExercises = student => pool
-    .query("SELECT exercises.id, exercises.author, exercises.tags, exercises.data, actions.result FROM actions \
+    .query("SELECT exercises.id, exercises.author, exercises.tags, exercises.data, COUNT(exercises.id) as attempts FROM actions \
       LEFT JOIN exercises ON actions.exercise = exercises.id AND actions.student = $1 \
-      WHERE student = $1", [student])
+      WHERE student = $1 \
+      GROUP BY exercises.id", [student])
     .then(data => data.rows)
 
   pool.getExercise = id => pool
