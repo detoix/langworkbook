@@ -1,1 +1,1 @@
-cd server && npm start ; cd .. && cd client && npm start
+npm start --prefix server ; npm start --prefix client

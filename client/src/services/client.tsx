@@ -2,7 +2,10 @@ import axios from "axios"
 import { IdCarrier, Excercise, NewExercise, ExerciseSolution } from "../models/excercise"
 import { Query } from "../models/query"
 
-const url = "https://green-sunset-2339.fly.dev"
+let parser = document.createElement("a")
+parser.href = (document.currentScript as any).src
+// parser.port = "8080"
+const url = parser.origin
 
 const getExercises = async (query: Query) => {
   const searchParams = new URLSearchParams()
