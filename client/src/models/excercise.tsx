@@ -14,7 +14,7 @@ interface NewExercise {
 }
 
 interface Excercise extends IdCarrier, NewExercise {
-  attempts?: number
+  attempts: number
 }
 
 interface ExerciseSolution extends IdCarrier {

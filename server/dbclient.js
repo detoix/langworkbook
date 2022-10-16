@@ -4,7 +4,7 @@ const createPool = (connectionString) => {
   let pool = new Pool({ connectionString: connectionString })
 
   pool.getExercises = (limit, offset, tags) => pool
-    .query("SELECT * FROM exercises \
+    .query("SELECT *, (SELECT COUNT(*) FROM actions WHERE actions.exercise = exercises.id) as attempts FROM exercises \
       WHERE tags @> $1::text[] \
       LIMIT $2 \
       OFFSET $3", [tags, limit, offset])

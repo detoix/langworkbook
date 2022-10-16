@@ -38,7 +38,7 @@ const Exercises = () => {
                 </CardContent>
                 <CardActions>
                   <Button size="small" component={Link} to={"/workbook/exercises/" + exercise.id}>Take</Button>
-                  {studentId === exercise.author && <Button size="small" onClick={_ => {
+                  {exercise.attempts < 1 && studentId === exercise.author && <Button size="small" onClick={_ => {
                     deleteExercise({ id: studentId }, { id: exercise.id }).then(e => navigate("#"))
                   }}>Delete</Button>}
                 </CardActions>
