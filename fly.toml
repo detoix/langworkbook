@@ -1,6 +1,6 @@
-# fly.toml file generated for green-sunset-2339 on 2022-08-03T19:28:04+02:00
+# fly.toml file generated for red-forest-219 on 2022-10-16T18:42:06+02:00
 
-app = "green-sunset-2339"
+app = "red-forest-219"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
