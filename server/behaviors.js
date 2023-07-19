@@ -16,14 +16,6 @@ const projectionOf = (exercises) => {
   return result
 }
 
-const evaluate = (exercise, answer) => {
-  let correct = exercise.data.answer.filter((phrase, index) => phrase == answer[index]).length
-  let result = correct != 0 ? correct / exercise.data.answer.length : 0
-
-  return result
-}
-
 module.exports = {
   projectionOf,
-  evaluate,
 }

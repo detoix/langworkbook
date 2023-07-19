@@ -1,4 +1,4 @@
-const { Pool } = require("pg")
+const { createPool } = require("./dbclient")
 const { getExercises, getActions } = require("./mocks")
 
 const clean = process.argv[3]
@@ -81,7 +81,7 @@ const fixPrimaryKeySequence = (client, table) => new Promise((resolve, reject) =
 
 const emptyPromise = client => new Promise((resolve, _) => resolve(client))
 
-new Pool({ connectionString: process.argv[2] || process.env.DATABASE_URL })
+createPool(process.argv[2] || process.env.DATABASE_URL)
   .connect()
   .then(client => clean ? dropExercisesTable(client) : emptyPromise(client))
   .then(client => createExercisesTable(client))

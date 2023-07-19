@@ -5,8 +5,7 @@
   "author": "First Last <first.last@example.com>",
   "main": "server.js",
   "scripts": {
-    "start": "echo 'postgres://postgres:postgres@localhost:5432/demo' | xargs -I{} sh -c 'nodemon index.js {} & node dbup.js {} clean'",
-    "qa": "echo 'postgres://xd:xd@localhost:5432/tmp' | xargs -I{} sh -c 'nodemon index.js {} & node dbup.js {}'",
+    "start": "echo 'postgres://postgres:postgres@localhost:5432/langworkbook' | xargs -I{} sh -c 'nodemon index.js {} & node dbup.js {} clean'",
     "test": "jest"
   },
   "dependencies": {
