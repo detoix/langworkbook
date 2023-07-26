@@ -12,6 +12,15 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/server/index.js"
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Jest: current file",
+            "program": "${workspaceFolder}/server/node_modules/.bin/jest",
+            "args": ["${fileBasenameNoExtension}", "--config", "${workspaceFolder}/server/jest.config.js"],
+            "console": "integratedTerminal",
+            "disableOptimisticBPs": true,
+          }
     ]
 }

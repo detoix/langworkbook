@@ -1,12 +1,29 @@
 const { getExercises, getActions } = require("./mocks")
-const { solveExercise } = require("./behaviors")
+const { projectionOf } = require("./behaviors")
 
 test("visitor can browse all excercises", () => {
   //todo
 })
 
-test("student can browse excercises they have never done before", () => {
+test("student can browse once solved due excercises in proper order", () => {
   //todo
+  let exercises = getExercises()
+  let actions = getActions()
+  let exercisesData = []
+
+  exercises.forEach(exercise => {
+    actions
+      .filter(action => action.exercise == exercise.id)
+      .filter(action => action.student == 0)
+      .forEach(action => {
+        let copy = {...exercise}
+        copy.timestamp = action.timestamp
+        copy.answer = action.result.answer
+        exercisesData.push(copy)
+      })    
+  })
+
+  let projection = projectionOf(exercisesData)
 })
 
 test("student can explore their exercises", () => {
