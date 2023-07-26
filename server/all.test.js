@@ -1,7 +1,7 @@
 const { getExercises, getActions } = require("./mocks")
 const { dueForRepetition } = require("./behaviors")
 
-test("visitor can browse all excercises", () => {
+test("visitor can browse all excercises filtered and with pagination", () => {
   //todo
 })
 
@@ -23,18 +23,6 @@ test("student can browse once solved due excercises in proper order", () => {
       })    
   })
 
-})
-
-test("student can explore their exercises", () => {
-  // let students = getStudents()
-  // let student = students[1]
-  // let exercises = getExercises()
-
-  // let myExercises = filterMyExercises(student, exercises)
-
-  // expect(myExercises).toMatchObject([
-  //   { id: 0, data: { answer: [{}, {}] }, history: [{correct: 1}, {correct: 0.5}] },
-  //   { id: 1 }])
 })
 
 test("student can do an excercise", () => {

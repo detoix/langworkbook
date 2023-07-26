@@ -37,10 +37,6 @@ const createPool = (connectionString) => {
     .query("DELETE FROM exercises \
       WHERE id = $1 AND author = $2 AND $1 NOT IN (SELECT exercise FROM actions)", [exerciseId, studentId])
 
-  pool.updateExercise = id => pool
-    .query("UPDATE exercises SET tags = $1, data = $2 \
-      WHERE id = $3 AND id NOT IN (SELECT exercise FROM actions)", [null, null, id])
-
   return pool
 }
 
