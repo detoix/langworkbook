@@ -71,7 +71,12 @@ app.post("/students/:studentId/exercises/:exerciseId", (req, res) => {
     .then(_ => pool.getMyExercises(req.params.studentId))
     .then(exercises => exercises.filter(dueForRepetition))
     .then(projection => {
-      action.next = projection.shift().id
+      let next = projection.shift()
+
+      if (next) {
+        action.next = next.id
+      }
+      
       res.send(action)
     })
 })

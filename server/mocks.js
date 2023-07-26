@@ -2,74 +2,74 @@ const getActions = () =>
 [
   {
     id: 0,
+    timestamp: '2020-01-1 00:00:00',
     student: 0,
     exercise: 0,
     result: {
       answer: ["encontre", "iba"],
-      correctAnswer: ["encontre", "iba"],
     }
   },
   {
     id: 1,
+    timestamp: '2020-01-1 00:00:00',
     student: 0,
     exercise: 0,
     result: {
       answer: ["encontre", "fue"],
-      correctAnswer: ["encontre", "iba"],
     }
   },
   {
     id: 2,
+    timestamp: '2020-01-1 00:00:00',
     student: 1,
     exercise: 0,
     result: {
       answer: ["encontre", "iba"],
-      correctAnswer: ["encontre", "iba"],
     }
   },
   {
     id: 3,
+    timestamp: '2020-01-1 00:00:00',
     student: 1,
     exercise: 0,
     result: {
       answer: ["encontre", "fue"],
-      correctAnswer: ["encontre", "iba"],
     }
   },
   {
     id: 4,
+    timestamp: '2020-01-1 00:00:00',
     student: 1,
     exercise: 1,
     result: {
       answer: ["Singl"],
-      correctAnswer: ["Single"],
     }
   },
   {
     id: 5,
+    timestamp: '2020-01-1 00:00:00',
     student: 1,
     exercise: 1,
     result: {
       answer: [""],
-      correctAnswer: ["Single"],
     }
   },
   {
     id: 6,
+    timestamp: '2020-01-1 00:00:00',
     student: 1,
     exercise: 1,
     result: {
       answer: ["Single"],
-      correctAnswer: ["Single"],
     }
   },
   {
     id: 7,
+    timestamp: '2020-01-1 00:00:00',
     student: 0,
     exercise: 3,
     result: {
       answer: ["der"],
-      correctAnswer: ["red"],
     }
   }
 ]

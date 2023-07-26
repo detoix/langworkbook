@@ -57,13 +57,13 @@ const createActionsTable = client => new Promise((resolve, reject) => {
     .catch(error => reject({client, error}))
 })
 
-const flattenActions = actions => actions.flatMap(action => [action.id, action.student, action.exercise, action.result])
+const flattenActions = actions => actions.flatMap(action => [action.id, action.timestamp, action.student, action.exercise, action.result])
 
 const insertActions = client => new Promise((resolve, reject) => {
   let actions = getActions()
   let flatMap = flattenActions(actions)
-  let query = "INSERT INTO actions(id, student, exercise, result) VALUES " +
-    actions.map((_, index) => `($${(index * 4) + 1}, $${(index * 4) + 2}, $${(index * 4) + 3}, $${(index * 4) + 4})`).join() +
+  let query = "INSERT INTO actions(id, timestamp, student, exercise, result) VALUES " +
+    actions.map((_, index) => `($${(index * 5) + 1}, $${(index * 5) + 2}, $${(index * 5) + 3}, $${(index * 5) + 4}, $${(index * 5) + 5})`).join() +
     " ON CONFLICT DO NOTHING"
 
   client

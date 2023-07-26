@@ -4,7 +4,7 @@ import { Query } from "../models/query"
 
 let parser = document.createElement("a")
 parser.href = (document.currentScript as any).src
-parser.port = "8080" //local development
+parser.port = parser.port.replace('3000', '8080') //redirect for local development
 const url = parser.origin
 
 const getExercises = async (query: Query) => {

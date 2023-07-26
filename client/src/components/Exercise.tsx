@@ -7,7 +7,8 @@ import { Button, Card, CardActions, CardContent, FormControl, InputLabel, Input,
 
 const handleSubmit = (student: IdCarrier, exercise: ExerciseSolution, navigate: NavigateFunction) => {
   solveExcercise(student, exercise).then(e => {
-    let query = buildQueryParams(new URLSearchParams(), { answer: e.result.answer, correctAnswer: e.result.correctAnswer, next: e.next })
+    let next = e.result.answer === e.result.correctAnswer ? e.next : exercise.id
+    let query = buildQueryParams(new URLSearchParams(), { answer: e.result.answer, correctAnswer: e.result.correctAnswer, next: next })
     navigate({search: query})
   })
 }
@@ -78,7 +79,7 @@ const Exercise = () => {
             </CardContent>
             <CardActions>
               {!answer && !correctAnswer && <Button type="submit">Submit</Button>}
-              {next && <Button component={Link} to={"/workbook/exercises/" + next}>Next</Button>}
+              {next && <Button component={Link} to={"/workbook/exercises/" + next}>{next === id ? "Try Again" : "Next"}</Button>}
             </CardActions>
           </Card>
         </form>
