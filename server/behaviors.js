@@ -1,17 +1,7 @@
 const dueForRepetition = exercise => {
-
-  let result = 10 * Math.sqrt(exercise.score)
-
-  return result < 1
-}
-
-const projectionOf = exercises => {
-  let result = exercises
-    .filter(dueForRepetition)
-
-  return result
+  return exercise.time_since_last_correct_answer.days > 10 * Math.sqrt(exercise.score)
 }
 
 module.exports = {
-  projectionOf,
+  dueForRepetition,
 }

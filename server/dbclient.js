@@ -19,7 +19,7 @@ const createPool = (connectionString) => {
     .then(data => data.rows.map(row => row.unnest))
 
   pool.getMyExercises = student => pool
-  .query("SELECT exercises.id, exercises.author, exercises.tags, exercises.data, COUNT(exercises.id) as score, NOW() - MIN(actions.timestamp) as time_from_last_correct_answer FROM actions \
+    .query("SELECT exercises.id, exercises.author, exercises.tags, exercises.data, COUNT(exercises.id) as score, NOW() - MAX(actions.timestamp) as time_since_last_correct_answer FROM actions \
       LEFT JOIN exercises ON actions.exercise = exercises.id AND actions.student = $1 \
       WHERE actions.student = $1 \
       AND actions.result->>'answer' = exercises.data->>'answer' \

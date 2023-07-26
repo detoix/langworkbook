@@ -1,5 +1,5 @@
 const { getExercises, getActions } = require("./mocks")
-const { projectionOf } = require("./behaviors")
+const { dueForRepetition } = require("./behaviors")
 
 test("visitor can browse all excercises", () => {
   //todo
@@ -23,7 +23,6 @@ test("student can browse once solved due excercises in proper order", () => {
       })    
   })
 
-  let projection = projectionOf(exercisesData)
 })
 
 test("student can explore their exercises", () => {

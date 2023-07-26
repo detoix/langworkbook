@@ -2,7 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
 const path = require("path")
-const { projectionOf } = require("./behaviors")
+const { dueForRepetition } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
 const connectionString = process.argv[2] || process.env.DATABASE_URL
@@ -36,7 +36,7 @@ app.get("/tags", (req, res) => {
 
 app.get("/students/:studentId/exercises", (req, res) => {
   pool.getMyExercises(req.params.studentId)
-    .then(exercises => projectionOf(exercises))
+    .then(exercises => exercises.filter(dueForRepetition))
     .then(projection => res.send(projection))
 })
 
@@ -69,7 +69,7 @@ app.post("/students/:studentId/exercises/:exerciseId", (req, res) => {
     })
     .then(action => pool.submitAction(action))
     .then(_ => pool.getMyExercises(req.params.studentId))
-    .then(exercises => projectionOf(exercises))
+    .then(exercises => exercises.filter(dueForRepetition))
     .then(projection => {
       action.next = projection.shift().id
       res.send(action)
