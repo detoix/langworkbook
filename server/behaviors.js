@@ -1,35 +1,13 @@
-const dueForRepetition = attempts => {
-  let correctAttempts = attempts
-    .filter(attempt => attempt.answer.toString() == attempt.data.answer.toString())
-    .count()
-  let result = 10 * Math.sqrt(correctAttempts)
+const dueForRepetition = exercise => {
 
-  return result
+  let result = 10 * Math.sqrt(exercise.score)
+
+  return result < 1
 }
 
-const projectionOf = exercisesAttempts => {
-  let exercises = exercisesAttempts.reduce((groups, excercise) => {
-    const group = (groups[excercise.id] || [])
-    group.push(excercise)
-    groups[excercise.id] = group
-    return groups;
-  }, {})
-
-  Object.values(exercises)
-    .forEach(e => dueForRepetition(e))
-
-  // exercises.forEach(exercise => {
-  //   if (myExercises[exercise.id]) {
-  //     myExercises[exercise.id].attempts += 1
-  //   } else {
-  //     myExercises[exercise.id] = exercise
-  //     myExercises[exercise.id].attempts = 1
-  //   }
-  // })
-
-  let result = Object.values(myExercises)
+const projectionOf = exercises => {
+  let result = exercises
     .filter(dueForRepetition)
-    .sort((a, b) => Math.sign(a.attempts - b.attempts))
 
   return result
 }
