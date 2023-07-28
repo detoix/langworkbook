@@ -90,6 +90,7 @@ app.post("/exercises", (req, res) => {
   })
 })
 
+//TODO: puścić równolegle wiele języków, potem użyć languagedetect/franc zeby ocenic który i zwrócić tag
 app.post('/ocr', upload.single('image'), (req, res) => {
   Tesseract.recognize(req.file.buffer, 'eng+deu', { logger: info => console.log(info) }).then(({ data: { text } }) => {
       res.json({ text })

@@ -4,6 +4,7 @@ import { getTags, createExercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { NewExercise } from "../models/excercise"
 import { Autocomplete, Button, Card, CardActions, CardContent, IconButton, InputAdornment, Stack, TextField } from "@mui/material"
+import ImageTextReader from './ImageTextReader'
 
 const defaultPhrases = [
   { phrase: "Florian ist seit", hint: "" },
@@ -124,6 +125,7 @@ const NewExerciseForm = () => {
                 </CardActions>
               </Card>
             </Stack>
+            <ImageTextReader />
           </form>
         )}
       </Async.Fulfilled>

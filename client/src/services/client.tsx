@@ -1,4 +1,5 @@
 import axios from "axios"
+import { Buffer } from "buffer";
 import { IdCarrier, Excercise, NewExercise, ExerciseSolution } from "../models/excercise"
 import { Query } from "../models/query"
 
@@ -50,6 +51,17 @@ const createExercise = async (exercise: NewExercise) => {
   return res.data
 }
 
+const ocr = async (imageSrc: string) => {
+  const formData = new FormData();
+  const base64Data = imageSrc.replace(/^data:image\/\w+;base64,/, '');
+  const bufferData = Buffer.from(base64Data, 'base64');
+  formData.append('image', new Blob([bufferData], { type: 'image/jpeg' }));
+
+
+  const res = await axios.post<any>(url + "/ocr", formData, { headers: { 'Content-Type': 'multipart/form-data', }})
+  return res.data.text
+}
+
 export {
   getMyExercises,
   getExercise,
@@ -58,4 +70,5 @@ export {
   solveExcercise,
   createExercise,
   deleteExercise,
+  ocr,
 }
