@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, Link, NavigateFunction } from "react-rout
 import { getTags, createExercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { NewExercise } from "../models/excercise"
-import { Autocomplete, Button, Card, CardActions, CardContent, Stack, TextField } from "@mui/material"
+import { Autocomplete, Button, Card, CardActions, CardContent, IconButton, InputAdornment, Stack, TextField } from "@mui/material"
 
 const defaultPhrases = [
   { phrase: "Florian ist seit", hint: "" },
@@ -48,6 +48,16 @@ const handleSubmit = (event: any, navigate: NavigateFunction) => {
   })
 }
 
+const appendPhrase = (id: number, value: string | null, navigate: NavigateFunction) => {
+  let query = buildQueryParams(new URLSearchParams(), { ["hint" + id]: value })
+  navigate({search: query})
+}
+
+const shuffle = (relPhrase: string | null) => {
+  if (relPhrase) { return relPhrase.split('').sort(function(){return 0.5-Math.random()}).join('') }
+  else { return null }
+}
+
 const NewExerciseForm = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -73,8 +83,30 @@ const NewExerciseForm = () => {
                     <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
                       {Array.from({length: phrasesCount}, (_, i) => 
                         <Stack key={i}>
-                          <TextField name={"phrase" + i} variant="standard" placeholder={defaultPhrases[i]?.phrase} />
-                          <TextField name={"hint" + i} variant="standard" placeholder={defaultPhrases[i]?.hint} />
+                          <TextField 
+                            name={"phrase" + i} 
+                            variant="standard" 
+                            placeholder={defaultPhrases[i]?.phrase}
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <IconButton edge="end" color="primary">~</IconButton>
+                                </InputAdornment>
+                              )
+                            }}
+                            //TODO: event listeners are only appended, they stack and slow it down
+                            onChange={e => e.target.nextSibling?.addEventListener('click', () => appendPhrase(i, e.target.value, navigate))} 
+                          />
+                          <TextField 
+                            name={"hint" + i} 
+                            variant="standard" 
+                            placeholder={defaultPhrases[i]?.hint} 
+                            value={shuffle(searchParams.get("hint" + i)) || ''}
+                            onFocus={e => { 
+                              e.target.select()
+                              appendPhrase(i, null, navigate)
+                            }}
+                          />
                         </Stack>
                       )}
                       <Button component={Link} to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>+</Button>

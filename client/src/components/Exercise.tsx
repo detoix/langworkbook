@@ -7,7 +7,7 @@ import { Button, Card, CardActions, CardContent, FormControl, InputLabel, Input,
 
 const handleSubmit = (student: IdCarrier, exercise: ExerciseSolution, navigate: NavigateFunction) => {
   solveExcercise(student, exercise).then(e => {
-    let next = e.result.answer.toString() == e.result.correctAnswer.toString() ? e.next : exercise.id
+    let next = e.result.answer.toString() === e.result.correctAnswer.toString() ? e.next : exercise.id
     let query = buildQueryParams(new URLSearchParams(), { answer: e.result.answer, correctAnswer: e.result.correctAnswer, next: next })
     navigate({search: query})
   })
