@@ -2,10 +2,13 @@ const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
 const path = require("path")
+const multer = require('multer')
+const Tesseract = require('tesseract.js')
 const { dueForRepetition } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
 const connectionString = process.argv[2] || process.env.DATABASE_URL
+const upload = multer({ storage: multer.memoryStorage() })
 const app = express()
 const pool = createPool(connectionString)
 const port = process.env.PORT || 8080
@@ -87,9 +90,17 @@ app.post("/exercises", (req, res) => {
   })
 })
 
+app.post('/ocr', upload.single('image'), (req, res) => {
+  Tesseract.recognize(req.file.buffer, 'eng+deu', { logger: info => console.log(info) }).then(({ data: { text } }) => {
+      res.json({ text })
+    }).catch(error => {
+      res.status(500).json({ error: 'OCR processing failed.' })
+    })
+})
+
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
+  res.sendFile(path.join(__dirname, '../client/build/index.html'))
+})
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}, connected with ${connectionString}`)

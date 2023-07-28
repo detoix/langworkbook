@@ -11,7 +11,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/server/index.js",
+            "cwd": "${workspaceFolder}/server",
+            "program": "index.js",
             "args": ["postgres://postgres:postgres@localhost:5432/langworkbook"]
         },
         {
