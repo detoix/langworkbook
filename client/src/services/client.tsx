@@ -51,14 +51,33 @@ const createExercise = async (exercise: NewExercise) => {
   return res.data
 }
 
-const ocr = async (imageSrc: string) => {
+const blobToBase64 = (blob: Blob): Promise<string> => {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64String = reader.result as string;
+      const base64Encoded = base64String.split(',')[1];
+      resolve(base64Encoded);
+    };
+
+    reader.onerror = () => {
+      reject(new Error("Failed to convert Blob to base64."));
+    };
+
+    reader.readAsDataURL(blob);
+  });
+}
+
+const ocr = async (blob: Blob) => {
   const formData = new FormData();
-  const base64Data = imageSrc.replace(/^data:image\/\w+;base64,/, '');
+
+  const base64Data = await blobToBase64(blob)
   const bufferData = Buffer.from(base64Data, 'base64');
   formData.append('image', new Blob([bufferData], { type: 'image/jpeg' }));
 
 
-  const res = await axios.post<any>(url + "/ocr", formData, { headers: { 'Content-Type': 'multipart/form-data', }})
+  const res = await axios.post<any>("https://website.objectequals.com", formData, { headers: { 'Content-Type': 'multipart/form-data', }})
   return res.data.text
 }
 

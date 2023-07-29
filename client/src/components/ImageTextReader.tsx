@@ -1,64 +1,328 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react'
 import Webcam from 'react-webcam';
-import { Buffer } from "buffer";
+import ReactCrop, {
+  centerCrop,
+  makeAspectCrop,
+  Crop,
+  PixelCrop,
+  convertToPixelCrop,
+} from 'react-image-crop'
+import { canvasPreview } from '../services/canvasPreview'
+import { useDebounceEffect } from '../services/useDebounceEffect'
 import { ocr } from "../services/client"
 
-const ImageTextReader = () => {
-    const [imageUri, setImageUri] = useState<string | null>(null);
-    const [recognizedText, setRecognizedText] = useState('');
+import 'react-image-crop/dist/ReactCrop.css'
+
+// This is to demonstate how to make and center a % aspect crop
+// which is a bit trickier so we use some helper functions.
+function centerAspectCrop(
+  mediaWidth: number,
+  mediaHeight: number,
+  aspect: number,
+) {
+  return centerCrop(
+    makeAspectCrop(
+      {
+        unit: '%',
+        width: 90,
+      },
+      aspect,
+      mediaWidth,
+      mediaHeight,
+    ),
+    mediaWidth,
+    mediaHeight,
+  )
+}
+
+export default function ImageTextReader() {
+  const [imgSrc, setImgSrc] = useState('')
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null)
+  const imgRef = useRef<HTMLImageElement>(null)
+  const hiddenAnchorRef = useRef<HTMLAnchorElement>(null)
+  const blobUrlRef = useRef('')
+  const [crop, setCrop] = useState<Crop>()
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
+  const [scale, setScale] = useState(1)
+  const [rotate, setRotate] = useState(0)
+  const [aspect, setAspect] = useState<number | undefined>(16 / 9)
+
+
+
+
+  const [recognizedText, setRecognizedText] = useState('');
   const webcamRef = useRef<any>(null); // Use any type for temporary fix
 
   const handleCameraCapture = () => {
     const imageSrc = webcamRef.current.getScreenshot();
-    setImageUri(imageSrc);
-    processImage(imageSrc);
+    setImgSrc(imageSrc);
   };
 
-  const processImage = async (imageSrc: any) => {
-
+  const processImage = async (imageSrc: Blob) => {
     // Send the imageSrc to the server for text recognition using tesseract.js or other OCR libraries
     // In this example, we'll just set some dummy text after a short delay.
     try {
-      // Replace this with actual server-side processing using tesseract.js or other OCR libraries
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       setRecognizedText(await ocr(imageSrc));
     } catch (error) {
       console.error('Error processing image:', error);
     }
   };
 
-  const handleImagePicker = (event: any) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
 
-    reader.onloadend = () => {
-      setImageUri(reader.result?.toString() ?? null);
-      processImage(reader.result);
-    };
 
-    if (file) {
-      reader.readAsDataURL(file);
+
+
+
+
+  function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files.length > 0) {
+      setCrop(undefined) // Makes crop preview update between images.
+      const reader = new FileReader()
+      reader.addEventListener('load', () =>
+        setImgSrc(reader.result?.toString() || ''),
+      )
+      reader.readAsDataURL(e.target.files[0])
     }
-  };
+  }
+
+  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+    if (aspect) {
+      const { width, height } = e.currentTarget
+      setCrop(centerAspectCrop(width, height, aspect))
+    }
+  }
+
+  function onDownloadCropClick() {
+    if (!previewCanvasRef.current) {
+      throw new Error('Crop canvas does not exist')
+    }
+
+    previewCanvasRef.current.toBlob((blob) => {
+      if (!blob) {
+        throw new Error('Failed to create blob')
+      }
+
+      processImage(blob)
+
+      // if (blobUrlRef.current) {
+      //   URL.revokeObjectURL(blobUrlRef.current)
+      // }
+      // blobUrlRef.current = URL.createObjectURL(blob)
+      // hiddenAnchorRef.current!.href = blobUrlRef.current
+      // hiddenAnchorRef.current!.click()
+    })
+  }
+
+  useDebounceEffect(
+    async () => {
+      if (
+        completedCrop?.width &&
+        completedCrop?.height &&
+        imgRef.current &&
+        previewCanvasRef.current
+      ) {
+        // We use canvasPreview as it's much faster than imgPreview.
+        canvasPreview(
+          imgRef.current,
+          previewCanvasRef.current,
+          completedCrop,
+          scale,
+          rotate,
+        )
+      }
+    },
+    100,
+    [completedCrop, scale, rotate],
+  )
+
+  function handleToggleAspectClick() {
+    if (aspect) {
+      setAspect(undefined)
+    } else if (imgRef.current) {
+      const { width, height } = imgRef.current
+      setAspect(16 / 9)
+      const newCrop = centerAspectCrop(width, height, 16 / 9)
+      setCrop(newCrop)
+      // Updates the preview
+      setCompletedCrop(convertToPixelCrop(newCrop, width, height))
+    }
+  }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div>
       <Webcam
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
+        videoConstraints={{facingMode: 'environment'}}
         style={{ width: 640, height: 480 }}
       />
       <button onClick={handleCameraCapture}>Capture</button>
-      <input type="file" accept="image/*" onChange={handleImagePicker} />
-      {imageUri && <img src={imageUri} alt="Captured" style={{ width: 200, height: 200 }} />}
+
+
       {recognizedText && (
-        <div style={{ padding: 20 }}>
-          <p>{recognizedText}</p>
+         <div style={{ padding: 20 }}>
+           <p>{recognizedText}</p>
+         </div>
+      )}
+
+      <div className="Crop-Controls">
+        <input type="file" accept="image/*" onChange={onSelectFile} />
+        <div>
+          <label htmlFor="scale-input">Scale: </label>
+          <input
+            id="scale-input"
+            type="number"
+            step="0.1"
+            value={scale}
+            disabled={!imgSrc}
+            onChange={(e) => setScale(Number(e.target.value))}
+          />
         </div>
+        <div>
+          <label htmlFor="rotate-input">Rotate: </label>
+          <input
+            id="rotate-input"
+            type="number"
+            value={rotate}
+            disabled={!imgSrc}
+            onChange={(e) =>
+              setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))
+            }
+          />
+        </div>
+        <div>
+          <button onClick={handleToggleAspectClick}>
+            Toggle aspect {aspect ? 'off' : 'on'}
+          </button>
+        </div>
+      </div>
+      {!!imgSrc && (
+        <ReactCrop
+          crop={crop}
+          onChange={(_, percentCrop) => setCrop(percentCrop)}
+          onComplete={(c) => setCompletedCrop(c)}
+          aspect={aspect}
+        >
+          <img
+            ref={imgRef}
+            alt="Crop me"
+            src={imgSrc}
+            style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
+            onLoad={onImageLoad}
+          />
+        </ReactCrop>
+      )}
+      {!!completedCrop && (
+        <>
+          <div>
+            <canvas
+              ref={previewCanvasRef}
+              style={{
+                border: '1px solid black',
+                objectFit: 'contain',
+                width: completedCrop.width,
+                height: completedCrop.height,
+              }}
+            />
+          </div>
+          <div>
+            <button onClick={onDownloadCropClick}>Download Crop</button>
+            <a
+              ref={hiddenAnchorRef}
+              download
+              style={{
+                position: 'absolute',
+                top: '-200vh',
+                visibility: 'hidden',
+              }}
+            >
+              Hidden download
+            </a>
+          </div>
+        </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ImageTextReader;
+
+
+
+
+// import React, { useState, useRef } from 'react';
+// import Webcam from 'react-webcam';
+// import ReactCrop, { type Crop } from 'react-image-crop'
+// import { Buffer } from "buffer";
+// import { ocr } from "../services/client"
+
+// const ImageTextReader = () => {
+//     const [imageUri, setImageUri] = useState<string | null>(null);
+//     const [recognizedText, setRecognizedText] = useState('');
+//   const webcamRef = useRef<any>(null); // Use any type for temporary fix
+//   const [crop, setCrop] = useState<Crop>()
+
+//   const handleCameraCapture = () => {
+//     const imageSrc = webcamRef.current.getScreenshot();
+//     setImageUri(imageSrc);
+//     processImage(imageSrc);
+//   };
+
+//   const processImage = async (imageSrc: any) => {
+
+//     // Send the imageSrc to the server for text recognition using tesseract.js or other OCR libraries
+//     // In this example, we'll just set some dummy text after a short delay.
+//     try {
+//       setRecognizedText(await ocr(imageSrc));
+//     } catch (error) {
+//       console.error('Error processing image:', error);
+//     }
+//   };
+
+//   const handleImagePicker = (event: any) => {
+//     const file = event.target.files[0];
+//     const reader = new FileReader();
+
+//     reader.onloadend = () => {
+//       setImageUri(reader.result?.toString() ?? null);
+//       processImage(reader.result);
+//     };
+
+//     if (file) {
+//       reader.readAsDataURL(file);
+//     }
+//   };
+
+//   const FACING_MODE_USER = "user";
+//   const FACING_MODE_ENVIRONMENT = "environment";
+
+//   const videoConstraints = {
+//     facingMode: FACING_MODE_ENVIRONMENT
+//   };
+
+//   return (
+//     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+//       <Webcam
+//         audio={false}
+//         ref={webcamRef}
+//         screenshotFormat="image/jpeg"
+//         videoConstraints={{...videoConstraints}}
+//         style={{ width: 640, height: 480 }}
+//       />
+//       <button onClick={handleCameraCapture}>Capture</button>
+//       <input type="file" accept="image/*" onChange={handleImagePicker} />
+//       {imageUri && (
+//         <ReactCrop crop={crop} onChange={c => setCrop(c)}>
+//           <img src={imageUri} />
+//         </ReactCrop>
+//       )}
+//       {recognizedText && (
+//         <div style={{ padding: 20 }}>
+//           <p>{recognizedText}</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default ImageTextReader;
