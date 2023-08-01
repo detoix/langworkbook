@@ -4,7 +4,7 @@ import { getTags, createExercise } from "../services/client"
 import { NewExercise } from "../models/excercise"
 import { Autocomplete, Button, Card, CardActions, CardContent, IconButton, InputAdornment, Stack, TextField } from "@mui/material"
 
-const handleSubmit = (event: any, navigate: NavigateFunction) => {
+const handleSubmit = (event: any, phrases: any, navigate: NavigateFunction) => {
   event.preventDefault()
 
   let exercise: NewExercise = {
@@ -36,12 +36,12 @@ const handleSubmit = (event: any, navigate: NavigateFunction) => {
   }
 
   createExercise(exercise).then(response => {
-    navigate(window.location.pathname, {state: {id: response.id, phrases: exercise.data.content}})
+    navigate(window.location.pathname, {state: {phrases: phrases, id: response.id}})
   })
 }
 
-const addSlot = (existingPhrases: any, navigate: NavigateFunction) => {
-  navigate(window.location.pathname, {state: {phrases: existingPhrases.concat([{}])}})
+const addSlot = (phrases: any, navigate: NavigateFunction) => {
+  navigate(window.location.pathname, {state: {phrases: phrases.concat([{}])}})
 }
 
 const appendPhrase = (id: number, value: string | null, state: any, navigate: NavigateFunction) => {
@@ -79,7 +79,7 @@ const NewExerciseForm = () => {
       <Async.Pending></Async.Pending>
       <Async.Fulfilled>
         {(tags: string[]) => (
-          <form onSubmit={event => handleSubmit(event, navigate)} style={{display: 'flex'}}>
+          <form onSubmit={event => handleSubmit(event, phrases, navigate)} style={{display: 'flex'}}>
             <Stack spacing={1}>
               {state && state.id && <Card variant="outlined">
                 <CardActions>
