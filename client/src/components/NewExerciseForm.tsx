@@ -1,7 +1,6 @@
 import Async from "react-async"
-import { useNavigate, useLocation, useSearchParams, Link, NavigateFunction } from "react-router-dom"
+import { useNavigate, useLocation, Link, NavigateFunction } from "react-router-dom"
 import { getTags, createExercise } from "../services/client"
-import { buildQueryParams } from "../services/buildQueryParams"
 import { NewExercise } from "../models/excercise"
 import { Autocomplete, Button, Card, CardActions, CardContent, IconButton, InputAdornment, Stack, TextField } from "@mui/material"
 
@@ -37,14 +36,17 @@ const handleSubmit = (event: any, navigate: NavigateFunction) => {
   }
 
   createExercise(exercise).then(response => {
-    let query = buildQueryParams(new URLSearchParams(), { createdId: response.id })
-    navigate({search: query})
+    navigate(window.location.pathname, {state: {id: response.id, phrases: exercise.data.content}})
   })
 }
 
-const appendPhrase = (id: number, value: string | null, searchParams: URLSearchParams, navigate: NavigateFunction) => {
-  let query = buildQueryParams(searchParams, { ["hint" + id]: value })
-  navigate({search: query})
+const addSlot = (existingPhrases: any, navigate: NavigateFunction) => {
+  navigate(window.location.pathname, {state: {phrases: existingPhrases.concat([{}])}})
+}
+
+const appendPhrase = (id: number, value: string | null, state: any, navigate: NavigateFunction) => {
+  // let query = buildQueryParams(searchParams, { ["hint" + id]: value })
+  navigate(window.location.pathname, {state: state})
 }
 
 const shuffle = (relPhrase: string | null) => {
@@ -52,14 +54,16 @@ const shuffle = (relPhrase: string | null) => {
   else { return null }
 }
 
-const layout = (provided: any) => { //if provided && provided.plainText, if provided && provided.phrases << tak zrobic navigate
-  if (provided) {
-    return provided.split(' ').map((chunk: any) => ({ phrase: chunk}))
+const layout = (state: any) => { //if provided && provided.plainText, if provided && provided.phrases << tak zrobic navigate
+  if (state && state.rawText) {
+    return state.rawText.split(' ').map((chunk: string) => ({ phrase: chunk}))
+  } else if (state && state.phrases) {
+    return state.phrases
   } else {
     return [
-      { phrase: "Florian ist seit", hint: "" },
-      { phrase: "drei", hint: "reid" },
-      { phrase: "Monaten wieder Single.", hint: "" }
+      { text: "Florian ist seit", hint: "" },
+      { text: "drei", hint: "reid" },
+      { text: "Monaten wieder Single.", hint: "" }
     ]
   }
 }
@@ -67,10 +71,8 @@ const layout = (provided: any) => { //if provided && provided.plainText, if prov
 const NewExerciseForm = () => {
   const navigate = useNavigate()
   const location = useLocation();
-  const phrases = layout(location.state)
-  const [searchParams] = useSearchParams()
-  const phrasesCount = Number(searchParams.get("phrases")) || phrases.length
-  const createdId = searchParams.get("createdId")
+  const state = location.state as any
+  const phrases = layout(state)
 
   return (
     <Async promiseFn={getTags}>
@@ -79,9 +81,9 @@ const NewExerciseForm = () => {
         {(tags: string[]) => (
           <form onSubmit={event => handleSubmit(event, navigate)} style={{display: 'flex'}}>
             <Stack spacing={1}>
-              {createdId && <Card variant="outlined">
+              {state && state.id && <Card variant="outlined">
                 <CardActions>
-                  <Button color="success" variant="contained" component={Link} to={"/workbook/exercises/" + createdId}>Take</Button>
+                  <Button color="success" variant="contained" component={Link} to={"/workbook/exercises/" + state.id}>Take</Button>
                   <Button color="success" variant="outlined" component={Link} to="/workbook/exercises/new/clear">Create another</Button>
                 </CardActions>
               </Card>}
@@ -89,13 +91,13 @@ const NewExerciseForm = () => {
                 <CardContent>
                   <Stack spacing={2}>
                     <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
-                      {Array.from({length: phrasesCount}, (_, i) => 
+                      {Array.from({length: phrases.length}, (_, i) => 
                         <Stack key={i}>
                           <TextField 
                             name={"phrase" + i} 
                             variant="standard" 
-                            placeholder={phrases[i]?.phrase}
-                            defaultValue={location.state ? phrases[i]?.phrase : null}
+                            placeholder={phrases[i]?.text}
+                            defaultValue={location.state ? phrases[i]?.text : null}
                             InputProps={{
                               endAdornment: (
                                 <InputAdornment position="end">
@@ -104,21 +106,22 @@ const NewExerciseForm = () => {
                               )
                             }}
                             //TODO: event listeners are only appended, they stack and slow it down
-                            onChange={e => e.target.nextSibling?.addEventListener('click', () => appendPhrase(i, e.target.value, searchParams, navigate))} 
+                            // onChange={e => e.target.nextSibling?.addEventListener('click', () => appendPhrase(i, e.target.value, state, navigate))} 
                           />
                           <TextField 
                             name={"hint" + i} 
                             variant="standard" 
-                            placeholder={phrases[i]?.hint} 
-                            value={shuffle(searchParams.get("hint" + i)) || ''}
-                            onFocus={e => { 
-                              e.target.select()
-                              appendPhrase(i, null, searchParams, navigate)
-                            }}
+                            placeholder={phrases[i]?.hint}
+                            defaultValue={location.state ? phrases[i]?.hint : null}
+                            // value={shuffle(searchParams.get("hint" + i)) || ''}
+                            // onFocus={e => { 
+                            //   e.target.select()
+                            //   appendPhrase(i, null, searchParams, navigate)
+                            // }}
                           />
                         </Stack>
                       )}
-                      <Button component={Link} to={{search: buildQueryParams(searchParams, { phrases: (phrasesCount + 1) })}}>+</Button>
+                      <Button onClick={() => addSlot(phrases, navigate)}>+</Button>
                     </Stack>
                     <Autocomplete
                       multiple

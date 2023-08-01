@@ -41,7 +41,7 @@ export default function ImageTextReader() {
   const previewCanvasRef = useRef<HTMLCanvasElement>(null)
   const imgRef = useRef<HTMLImageElement>(null)
   const hiddenAnchorRef = useRef<HTMLAnchorElement>(null)
-  const blobUrlRef = useRef('')
+  // const blobUrlRef = useRef('')
   const [crop, setCrop] = useState<Crop>()
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
   const [scale, setScale] = useState(1)
@@ -52,7 +52,7 @@ export default function ImageTextReader() {
 
 
 
-  const [recognizedText, setRecognizedText] = useState('');
+  // const [recognizedText, setRecognizedText] = useState('');
   const webcamRef = useRef<any>(null); // Use any type for temporary fix
 
   const handleCameraCapture = () => {
@@ -64,10 +64,10 @@ export default function ImageTextReader() {
     // Send the imageSrc to the server for text recognition using tesseract.js or other OCR libraries
     // In this example, we'll just set some dummy text after a short delay.
     try {
-      const t = await ocr(imageSrc)
-      setRecognizedText(t);
+      const rawText = await ocr(imageSrc)
+      // setRecognizedText(t);
 
-      navigate('/workbook/exercises/new', {state: t})
+      navigate('/workbook/exercises/new', {state: {rawText: rawText}})
 
 
 
@@ -168,11 +168,11 @@ export default function ImageTextReader() {
       <button onClick={handleCameraCapture}>Capture</button>
 
 
-      {recognizedText && (
+      {/* {recognizedText && (
          <div style={{ padding: 20 }}>
            <p>{recognizedText}</p>
          </div>
-      )}
+      )} */}
 
       <div className="Crop-Controls">
         <input type="file" accept="image/*" onChange={onSelectFile} />
