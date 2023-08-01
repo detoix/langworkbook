@@ -7,7 +7,7 @@ const Tesseract = require('tesseract.js')
 const { dueForRepetition } = require("./behaviors")
 const { createPool } = require("./dbclient")
 
-const connectionString = process.argv[2] || process.env.DATABASE_URL
+const connectionString = process.argv[2] || process.env.DATABASE_URL //dodac do dockerfile kopiowanie traineddata
 const upload = multer({ storage: multer.memoryStorage() })
 const app = express()
 // const pool = createPool(connectionString)

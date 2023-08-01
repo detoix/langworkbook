@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import Webcam from 'react-webcam';
+import { useParams, useSearchParams, useNavigate, NavigateFunction, Link } from "react-router-dom"
 import ReactCrop, {
   centerCrop,
   makeAspectCrop,
@@ -46,6 +47,7 @@ export default function ImageTextReader() {
   const [scale, setScale] = useState(1)
   const [rotate, setRotate] = useState(0)
   const [aspect, setAspect] = useState<number | undefined>(16 / 9)
+  const navigate = useNavigate()
 
 
 
@@ -62,7 +64,13 @@ export default function ImageTextReader() {
     // Send the imageSrc to the server for text recognition using tesseract.js or other OCR libraries
     // In this example, we'll just set some dummy text after a short delay.
     try {
-      setRecognizedText(await ocr(imageSrc));
+      const t = await ocr(imageSrc)
+      setRecognizedText(t);
+
+      navigate('/workbook/exercises/new', {state: t})
+
+
+
     } catch (error) {
       console.error('Error processing image:', error);
     }

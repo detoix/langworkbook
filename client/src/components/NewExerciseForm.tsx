@@ -1,15 +1,9 @@
 import Async from "react-async"
-import { useNavigate, useSearchParams, Link, NavigateFunction } from "react-router-dom"
+import { useNavigate, useLocation, useSearchParams, Link, NavigateFunction } from "react-router-dom"
 import { getTags, createExercise } from "../services/client"
 import { buildQueryParams } from "../services/buildQueryParams"
 import { NewExercise } from "../models/excercise"
 import { Autocomplete, Button, Card, CardActions, CardContent, IconButton, InputAdornment, Stack, TextField } from "@mui/material"
-
-const defaultPhrases = [
-  { phrase: "Florian ist seit", hint: "" },
-  { phrase: "drei", hint: "reid" },
-  { phrase: "Monaten wieder Single.", hint: "" }
-]
 
 const handleSubmit = (event: any, navigate: NavigateFunction) => {
   event.preventDefault()
@@ -48,8 +42,8 @@ const handleSubmit = (event: any, navigate: NavigateFunction) => {
   })
 }
 
-const appendPhrase = (id: number, value: string | null, navigate: NavigateFunction) => {
-  let query = buildQueryParams(new URLSearchParams(), { ["hint" + id]: value })
+const appendPhrase = (id: number, value: string | null, searchParams: URLSearchParams, navigate: NavigateFunction) => {
+  let query = buildQueryParams(searchParams, { ["hint" + id]: value })
   navigate({search: query})
 }
 
@@ -58,10 +52,24 @@ const shuffle = (relPhrase: string | null) => {
   else { return null }
 }
 
+const layout = (provided: any) => { //if provided && provided.plainText, if provided && provided.phrases << tak zrobic navigate
+  if (provided) {
+    return provided.split(' ').map((chunk: any) => ({ phrase: chunk}))
+  } else {
+    return [
+      { phrase: "Florian ist seit", hint: "" },
+      { phrase: "drei", hint: "reid" },
+      { phrase: "Monaten wieder Single.", hint: "" }
+    ]
+  }
+}
+
 const NewExerciseForm = () => {
   const navigate = useNavigate()
+  const location = useLocation();
+  const phrases = layout(location.state)
   const [searchParams] = useSearchParams()
-  const phrasesCount = Number(searchParams.get("phrases")) || 3
+  const phrasesCount = Number(searchParams.get("phrases")) || phrases.length
   const createdId = searchParams.get("createdId")
 
   return (
@@ -86,7 +94,8 @@ const NewExerciseForm = () => {
                           <TextField 
                             name={"phrase" + i} 
                             variant="standard" 
-                            placeholder={defaultPhrases[i]?.phrase}
+                            placeholder={phrases[i]?.phrase}
+                            defaultValue={location.state ? phrases[i]?.phrase : null}
                             InputProps={{
                               endAdornment: (
                                 <InputAdornment position="end">
@@ -95,16 +104,16 @@ const NewExerciseForm = () => {
                               )
                             }}
                             //TODO: event listeners are only appended, they stack and slow it down
-                            onChange={e => e.target.nextSibling?.addEventListener('click', () => appendPhrase(i, e.target.value, navigate))} 
+                            onChange={e => e.target.nextSibling?.addEventListener('click', () => appendPhrase(i, e.target.value, searchParams, navigate))} 
                           />
                           <TextField 
                             name={"hint" + i} 
                             variant="standard" 
-                            placeholder={defaultPhrases[i]?.hint} 
+                            placeholder={phrases[i]?.hint} 
                             value={shuffle(searchParams.get("hint" + i)) || ''}
                             onFocus={e => { 
                               e.target.select()
-                              appendPhrase(i, null, navigate)
+                              appendPhrase(i, null, searchParams, navigate)
                             }}
                           />
                         </Stack>
