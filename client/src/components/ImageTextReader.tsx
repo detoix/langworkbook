@@ -97,6 +97,7 @@ export default function ImageTextReader() {
     if (aspect) {
       const { width, height } = e.currentTarget
       setCrop(centerAspectCrop(width, height, aspect))
+      setAspect(undefined)
     }
   }
 
@@ -168,14 +169,7 @@ export default function ImageTextReader() {
       <button onClick={handleCameraCapture}>Capture</button>
 
 
-      {/* {recognizedText && (
-         <div style={{ padding: 20 }}>
-           <p>{recognizedText}</p>
-         </div>
-      )} */}
-
       <div className="Crop-Controls">
-        <input type="file" accept="image/*" onChange={onSelectFile} />
         <div>
           <label htmlFor="scale-input">Scale: </label>
           <input
@@ -235,7 +229,7 @@ export default function ImageTextReader() {
             />
           </div>
           <div>
-            <button onClick={onDownloadCropClick}>Download Crop</button>
+            <button onClick={onDownloadCropClick}>Generate excercise</button>
             <a
               ref={hiddenAnchorRef}
               download
@@ -253,84 +247,3 @@ export default function ImageTextReader() {
     </div>
   )
 }
-
-
-
-
-
-// import React, { useState, useRef } from 'react';
-// import Webcam from 'react-webcam';
-// import ReactCrop, { type Crop } from 'react-image-crop'
-// import { Buffer } from "buffer";
-// import { ocr } from "../services/client"
-
-// const ImageTextReader = () => {
-//     const [imageUri, setImageUri] = useState<string | null>(null);
-//     const [recognizedText, setRecognizedText] = useState('');
-//   const webcamRef = useRef<any>(null); // Use any type for temporary fix
-//   const [crop, setCrop] = useState<Crop>()
-
-//   const handleCameraCapture = () => {
-//     const imageSrc = webcamRef.current.getScreenshot();
-//     setImageUri(imageSrc);
-//     processImage(imageSrc);
-//   };
-
-//   const processImage = async (imageSrc: any) => {
-
-//     // Send the imageSrc to the server for text recognition using tesseract.js or other OCR libraries
-//     // In this example, we'll just set some dummy text after a short delay.
-//     try {
-//       setRecognizedText(await ocr(imageSrc));
-//     } catch (error) {
-//       console.error('Error processing image:', error);
-//     }
-//   };
-
-//   const handleImagePicker = (event: any) => {
-//     const file = event.target.files[0];
-//     const reader = new FileReader();
-
-//     reader.onloadend = () => {
-//       setImageUri(reader.result?.toString() ?? null);
-//       processImage(reader.result);
-//     };
-
-//     if (file) {
-//       reader.readAsDataURL(file);
-//     }
-//   };
-
-//   const FACING_MODE_USER = "user";
-//   const FACING_MODE_ENVIRONMENT = "environment";
-
-//   const videoConstraints = {
-//     facingMode: FACING_MODE_ENVIRONMENT
-//   };
-
-//   return (
-//     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-//       <Webcam
-//         audio={false}
-//         ref={webcamRef}
-//         screenshotFormat="image/jpeg"
-//         videoConstraints={{...videoConstraints}}
-//         style={{ width: 640, height: 480 }}
-//       />
-//       <button onClick={handleCameraCapture}>Capture</button>
-//       <input type="file" accept="image/*" onChange={handleImagePicker} />
-//       {imageUri && (
-//         <ReactCrop crop={crop} onChange={c => setCrop(c)}>
-//           <img src={imageUri} />
-//         </ReactCrop>
-//       )}
-//       {recognizedText && (
-//         <div style={{ padding: 20 }}>
-//           <p>{recognizedText}</p>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ImageTextReader;

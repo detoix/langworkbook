@@ -12,7 +12,7 @@ const App = () => {
         <AppBar position="sticky">
           <Toolbar>
             <Button color="inherit" component={Link} to={"/workbook/"}>HOME</Button>
-            <Button color="inherit" component={Link} to={"/workbook/exercises/new"}>ADD EXERCISE</Button>
+            <Button color="inherit" component={Link} to={"/workbook/exercises/new/clear"}>ADD EXERCISE</Button>
             <Button color="inherit" component={Link} to={"/workbook/pic2exercise"}>PIC2EXERCISE</Button>
             <Button color="inherit" component={Link} to={"/workbook/students/0"}> MY ACCOUNT</Button>
           </Toolbar>

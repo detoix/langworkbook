@@ -51,12 +51,10 @@ const addSlot = (phrases: any, navigate: NavigateFunction) => {
   navigate(window.location.pathname, {state: {phrases: phrases.concat([{}])}})
 }
 
-const generateHint = (event: any, index: number, hintsCache: Map<number, string>, navigate: NavigateFunction) => {
+const generateHint = (event: any, index: number, hintsCache: Map<number, string>, phrasesCount: number, navigate: NavigateFunction) => {
   let exercise = assembleExercise((event.target as any).form)
   exercise.data.content[index].hint = hintsCache.get(index)
-  for (let i = exercise.data.content.length; i < 3; i++) {
-    exercise.data.content.push({})
-  }
+  for (let i = exercise.data.content.length; i < phrasesCount; i++) { exercise.data.content.push({}) }
   navigate(window.location.pathname, {state: {phrases: exercise.data.content}})
 }
 
@@ -65,9 +63,9 @@ const shuffle = (relPhrase: string) => {
   else { return "" }
 }
 
-const layout = (state: any) => {
+const loadFormContent = (state: any) => {
   if (state && state.rawText) {
-    return state.rawText.split(' ').map((chunk: string) => ({ phrase: { text: chunk}}))
+    return state.rawText.split(' ').map((chunk: string) => ({ text: chunk }))
   } else if (state && state.phrases) {
     return state.phrases
   } else {
@@ -79,12 +77,22 @@ const layout = (state: any) => {
   }
 }
 
+const hintsFor = (phrases: any) => {
+  let map = new Map<number, string>()
+  for (let index = 0; index < phrases.length; index++) {
+    if (phrases[index].text) {
+      map.set(index, shuffle(phrases[index].text))
+    }
+  }
+  return map
+}
+
 const NewExerciseForm = () => {
   const navigate = useNavigate()
   const location = useLocation();
   const state = location.state as any
-  const phrases = layout(state)
-  const [hintsCache, setHintsCache] = useState<Map<number, string>>(new Map<number, string>())
+  const phrases = loadFormContent(state)
+  const [hintsCache, setHintsCache] = useState<Map<number, string>>(hintsFor(phrases))
 
   return (
     <Async promiseFn={getTags}>
@@ -113,7 +121,7 @@ const NewExerciseForm = () => {
                             InputProps={{
                               endAdornment: (
                                 <InputAdornment position="end">
-                                  <IconButton edge="end" color="primary" onClick={e => generateHint(e, i, hintsCache, navigate)}>~</IconButton>
+                                  <IconButton edge="end" color="primary" onClick={e => generateHint(e, i, hintsCache, phrases.length, navigate)}>~</IconButton>
                                 </InputAdornment>
                               )
                             }}
@@ -122,9 +130,9 @@ const NewExerciseForm = () => {
                           <TextField 
                             name={"hint" + i} 
                             variant="standard" 
-                            placeholder={state ? phrases[i]?.hint : null}
+                            placeholder={phrases[i]?.hint}
                             defaultValue={state ? phrases[i]?.hint : null}
-                            key={state ? phrases[i]?.hint : null}
+                            key={phrases[i]?.hint}
                           />
                         </Stack>
                       )}
