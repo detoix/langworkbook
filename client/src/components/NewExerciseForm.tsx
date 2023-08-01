@@ -1,12 +1,11 @@
 import Async from "react-async"
+import { useState } from "react"
 import { useNavigate, useLocation, Link, NavigateFunction } from "react-router-dom"
 import { getTags, createExercise } from "../services/client"
 import { NewExercise } from "../models/excercise"
 import { Autocomplete, Button, Card, CardActions, CardContent, IconButton, InputAdornment, Stack, TextField } from "@mui/material"
 
-const handleSubmit = (event: any, phrases: any, navigate: NavigateFunction) => {
-  event.preventDefault()
-
+const assembleExercise = (form: any) => {
   let exercise: NewExercise = {
     author: 0,
     tags: [],
@@ -16,13 +15,13 @@ const handleSubmit = (event: any, phrases: any, navigate: NavigateFunction) => {
     }
   }
 
-  for (let index = 0; index < event.target.tags.parentNode.children.length - 3; index++) {
-    exercise.tags.push(event.target.tags.parentNode.children[index].textContent)
+  for (let index = 0; index < form.tags.parentNode.children.length - 3; index++) {
+    exercise.tags.push(form.tags.parentNode.children[index].textContent)
   }
 
-  for (let index = 0; index < event.target.length - 1; index++) {
-    let phrase = event.target["phrase" + index]
-    let hint = event.target["hint" + index]
+  for (let index = 0; index < form.length - 1; index++) {
+    let phrase = form["phrase" + index]
+    let hint = form["hint" + index]
 
     if (phrase && phrase.value) {
       exercise.data.content.push({text: phrase.value})
@@ -35,8 +34,16 @@ const handleSubmit = (event: any, phrases: any, navigate: NavigateFunction) => {
     }
   }
 
+  return exercise
+}
+
+const handleSubmit = (event: any, navigate: NavigateFunction) => {
+  event.preventDefault()
+
+  let exercise = assembleExercise(event.target)
+
   createExercise(exercise).then(response => {
-    navigate(window.location.pathname, {state: {phrases: phrases, id: response.id}})
+    navigate(window.location.pathname, {state: {phrases: exercise.data.content, id: response.id}})
   })
 }
 
@@ -44,19 +51,23 @@ const addSlot = (phrases: any, navigate: NavigateFunction) => {
   navigate(window.location.pathname, {state: {phrases: phrases.concat([{}])}})
 }
 
-const appendPhrase = (id: number, value: string | null, state: any, navigate: NavigateFunction) => {
-  // let query = buildQueryParams(searchParams, { ["hint" + id]: value })
-  navigate(window.location.pathname, {state: state})
+const generateHint = (event: any, index: number, hintsCache: Map<number, string>, navigate: NavigateFunction) => {
+  let exercise = assembleExercise((event.target as any).form)
+  exercise.data.content[index].hint = hintsCache.get(index)
+  for (let i = exercise.data.content.length; i < 3; i++) {
+    exercise.data.content.push({})
+  }
+  navigate(window.location.pathname, {state: {phrases: exercise.data.content}})
 }
 
-const shuffle = (relPhrase: string | null) => {
+const shuffle = (relPhrase: string) => {
   if (relPhrase) { return relPhrase.split('').sort(function(){return 0.5-Math.random()}).join('') }
-  else { return null }
+  else { return "" }
 }
 
-const layout = (state: any) => { //if provided && provided.plainText, if provided && provided.phrases << tak zrobic navigate
+const layout = (state: any) => {
   if (state && state.rawText) {
-    return state.rawText.split(' ').map((chunk: string) => ({ phrase: chunk}))
+    return state.rawText.split(' ').map((chunk: string) => ({ phrase: { text: chunk}}))
   } else if (state && state.phrases) {
     return state.phrases
   } else {
@@ -73,13 +84,14 @@ const NewExerciseForm = () => {
   const location = useLocation();
   const state = location.state as any
   const phrases = layout(state)
+  const [hintsCache, setHintsCache] = useState<Map<number, string>>(new Map<number, string>())
 
   return (
     <Async promiseFn={getTags}>
       <Async.Pending></Async.Pending>
       <Async.Fulfilled>
         {(tags: string[]) => (
-          <form onSubmit={event => handleSubmit(event, phrases, navigate)} style={{display: 'flex'}}>
+          <form onSubmit={event => handleSubmit(event, navigate)} style={{display: 'flex'}}>
             <Stack spacing={1}>
               {state && state.id && <Card variant="outlined">
                 <CardActions>
@@ -97,27 +109,22 @@ const NewExerciseForm = () => {
                             name={"phrase" + i} 
                             variant="standard" 
                             placeholder={phrases[i]?.text}
-                            defaultValue={location.state ? phrases[i]?.text : null}
+                            defaultValue={state ? phrases[i]?.text : null}
                             InputProps={{
                               endAdornment: (
                                 <InputAdornment position="end">
-                                  <IconButton edge="end" color="primary">~</IconButton>
+                                  <IconButton edge="end" color="primary" onClick={e => generateHint(e, i, hintsCache, navigate)}>~</IconButton>
                                 </InputAdornment>
                               )
                             }}
-                            //TODO: event listeners are only appended, they stack and slow it down
-                            // onChange={e => e.target.nextSibling?.addEventListener('click', () => appendPhrase(i, e.target.value, state, navigate))} 
+                            onChange={e => setHintsCache(new Map<number, string>(hintsCache).set(i, shuffle(e.target.value)))}
                           />
                           <TextField 
                             name={"hint" + i} 
                             variant="standard" 
-                            placeholder={phrases[i]?.hint}
-                            defaultValue={location.state ? phrases[i]?.hint : null}
-                            // value={shuffle(searchParams.get("hint" + i)) || ''}
-                            // onFocus={e => { 
-                            //   e.target.select()
-                            //   appendPhrase(i, null, searchParams, navigate)
-                            // }}
+                            placeholder={state ? phrases[i]?.hint : null}
+                            defaultValue={state ? phrases[i]?.hint : null}
+                            key={state ? phrases[i]?.hint : null}
                           />
                         </Stack>
                       )}
