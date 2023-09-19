@@ -3,7 +3,7 @@ import { useState } from "react"
 import { useNavigate, useLocation, Link, NavigateFunction } from "react-router-dom"
 import { getTags, createExercise } from "../services/client"
 import { NewExercise } from "../models/excercise"
-import { Autocomplete, Button, Card, CardActions, CardContent, IconButton, InputAdornment, Stack, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, Card, CardActions, CardContent, IconButton, InputAdornment, Stack, TextField } from "@mui/material"
 
 const assembleExercise = (form: any) => {
   let exercise: NewExercise = {
@@ -100,7 +100,7 @@ const NewExerciseForm = () => {
       <Async.Fulfilled>
         {(tags: string[]) => (
           <form onSubmit={event => handleSubmit(event, navigate)} style={{display: 'flex'}}>
-            <Stack spacing={1}>
+            <Stack spacing={1} style={{ width: '100%' }}>
               {state && state.id && <Card variant="outlined">
                 <CardActions>
                   <Button color="success" variant="contained" component={Link} to={"/workbook/exercises/" + state.id}>Take</Button>
@@ -110,9 +110,17 @@ const NewExerciseForm = () => {
               <Card variant="outlined">
                 <CardContent>
                   <Stack spacing={2}>
-                    <Stack direction="row" spacing={1} style={{ alignItems: "center" }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                       {Array.from({length: phrases.length}, (_, i) => 
-                        <Stack key={i}>
+                        <Stack key={i} style={{ 
+                            marginRight: 8, 
+                            marginBottom: 8,
+                            borderWidth: 1,
+                            borderStyle: 'dashed',
+                            borderColor: 'rgba(0, 0, 0, 0.12)',
+                            borderRadius: 10,
+                            padding: 10
+                        }}>
                           <TextField 
                             name={"phrase" + i} 
                             variant="standard" 
@@ -137,7 +145,7 @@ const NewExerciseForm = () => {
                         </Stack>
                       )}
                       <Button onClick={() => addSlot(phrases, navigate)}>+</Button>
-                    </Stack>
+                    </Box>
                     <Autocomplete
                       multiple
                       freeSolo

@@ -23,6 +23,7 @@ const App = () => {
           <Route path="/workbook/exercises/new" element={<NewExerciseForm />} />
           <Route path="/workbook/exercises/new/clear" element={<Navigate to="/workbook/exercises/new" />} />
           <Route path="/workbook/pic2exercise" element={<ImageTextReader />} />
+          <Route path="/workbook/pic2exercise/clear" element={<Navigate to="/workbook/pic2exercise" />} />
           <Route path="/workbook/exercises/:id" element={<Excercise />} />
           <Route path="/workbook/students/:id" element={<Workbook />} />
         </Routes>
